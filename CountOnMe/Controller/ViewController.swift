@@ -15,26 +15,7 @@ class ViewController: UIViewController {
     
     var calculation = Calculation()
     
-    var elements: [String] {
-        return textView.text.split(separator: " ").map { "\($0)" }
-    }
-    
-    // Error check computed variables
-    var expressionIsCorrect: Bool {
-        return elements.last != "+" && elements.last != "-"
-    }
-    
-    var expressionHaveEnoughElement: Bool {
-        return elements.count >= 3
-    }
-    
-    var canAddOperator: Bool {
-        return elements.last != "+" && elements.last != "-"
-    }
-    
-    var expressionHaveResult: Bool {
-        return textView.text.firstIndex(of: "=") != nil
-    }
+  
     
     private func error(message: String) {
         let alertVC = UIAlertController(title: "Zéro!", message: message, preferredStyle: .alert)
@@ -46,6 +27,7 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        calculation.calculationDelegate = self
     }
     
     
@@ -55,103 +37,47 @@ class ViewController: UIViewController {
             return
         }
         
-        if expressionHaveResult {
-            textView.text = ""
+        if calculation.expressionHaveResult {
+            calculation.calculationView = ""
         }
         
-        textView.text.append(numberText)
+        calculation.calculationView.append(numberText)
     }
     
-    
-    func additionOrSubstraction(symbol: String) {
-        if canAddOperator {
-            textView.text.append(symbol)
-        } else {
-            error(message: "Un operateur est déja mis !")
-        }
-    }
+
     
     @IBAction func didTapOperatorButton(_ sender: UIButton) {
         if sender == operatorsButtons[0] {
-            additionOrSubstraction(symbol: " + ")
+            calculation.additionOrSubstraction(symbol: " + ")
         } else if sender == operatorsButtons[1] {
-            additionOrSubstraction(symbol: " - ")
+            calculation.additionOrSubstraction(symbol: " - ")
         } else if sender == operatorsButtons[2] {
-            guard expressionIsCorrect else {
-               error(message: "Entrez une expression correcte !")
+            guard calculation.expressionIsCorrect else {
+                error(message: "Entrez une expression correcte !")
             return
             }
-            
-            guard expressionHaveEnoughElement else {
+            guard calculation.expressionHasEnoughElements else {
                 error(message: "Démarrez un nouveau calcul !")
                 return
             }
-            
-            // Create local copy of operations
-            var operationsToReduce = elements
-            
-            // Iterate over operations while an operand still here
-            while operationsToReduce.count > 1 {
-                let left = Int(operationsToReduce[0])!
-                let operand = operationsToReduce[1]
-                let right = Int(operationsToReduce[2])!
-                
-                let result: String
-                switch operand {
-                case "+": result = calculation.addition(firstNumber: left, secondNumber: right)
-                case "-": result = calculation.substraction(firstNumber: left, secondNumber: right)
-                default: fatalError("Unknown operator !")
-                }
-                
-                operationsToReduce = Array(operationsToReduce.dropFirst(3))
-                operationsToReduce.insert("\(result)", at: 0)
-            }
-            
-            textView.text.append(" = \(operationsToReduce.first!)")
+            calculation.equals()
         }
     }
-    
-//    @IBAction func tappedAdditionButton(_ sender: UIButton) {
-//        additionOrSubstraction(symbol: " + ")
-//    }
-//    
-//    @IBAction func tappedSubstractionButton(_ sender: UIButton) {
-//        additionOrSubstraction(symbol: " - ")
-//    }
-
-//    @IBAction func tappedEqualButton(_ sender: UIButton) {
-//        guard expressionIsCorrect else {
-//           error(message: "Entrez une expression correcte !")
-//        return
-//        }
-//
-//        guard expressionHaveEnoughElement else {
-//            error(message: "Démarrez un nouveau calcul !")
-//            return
-//        }
-//
-//        // Create local copy of operations
-//        var operationsToReduce = elements
-//
-//        // Iterate over operations while an operand still here
-//        while operationsToReduce.count > 1 {
-//            let left = Int(operationsToReduce[0])!
-//            let operand = operationsToReduce[1]
-//            let right = Int(operationsToReduce[2])!
-//
-//            let result: String
-//            switch operand {
-//            case "+": result = calculation.addition(firstNumber: left, secondNumber: right)
-//            case "-": result = calculation.substraction(firstNumber: left, secondNumber: right)
-//            default: fatalError("Unknown operator !")
-//            }
-//
-//            operationsToReduce = Array(operationsToReduce.dropFirst(3))
-//            operationsToReduce.insert("\(result)", at: 0)
-//        }
-//
-//        textView.text.append(" = \(operationsToReduce.first!)")
-//    }
-
 }
 
+extension ViewController: CalculationDelegate {
+    func calculationUpdated(_ calcul: String) {
+        textView.text = calcul
+    }
+}
+
+extension ViewController: ErrorDelegate {
+
+    func errorNotEnoughElements() {
+        return error(message: "Il manque certains éléments pour pouvoir effectuer un calcul")
+    }
+
+    func errorExpressionIsIncorrect() {
+        return error(message: "Entre une expression correcte !")
+    }
+}

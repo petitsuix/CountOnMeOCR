@@ -41,4 +41,24 @@ class CountOnMeTests: XCTestCase {
         XCTAssertEqual(result, "1")
     }
     
+    func testGivenFirstNumberIs3AndSecondNumberIs2_WhenMultiplicating_ThenResultIs6() {
+        // Given :
+        let firstNumber = 3
+        let secondNumber = 2
+        // When :
+        let result = calculation?.multiplication(firstNumber: firstNumber, secondNumber: secondNumber)
+        // Then :
+        XCTAssertEqual(result, "6")
+    }
+    
+    func testGivenFirstNumberIs6AndSecondNumberIs2_WhenDividing_ThenResultIs3() {
+        // Given :
+        let firstNumber = 6
+        let secondNumber = 2
+        // When :
+        let result = calculation?.division(firstNumber: firstNumber, secondNumber: secondNumber)
+        // Then :
+        XCTAssertEqual(result, "3")
+    }
+    
 }
