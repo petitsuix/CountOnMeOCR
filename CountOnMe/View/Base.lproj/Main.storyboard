@@ -162,7 +162,7 @@
                                 <rect key="frame" x="16" y="775" width="382" height="63"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DQU-P5-55X">
-                                        <rect key="frame" x="0.0" y="0.0" width="64.5" height="63"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="51" height="63"/>
                                         <color key="backgroundColor" red="0.46913260919999999" green="0.7149516575" blue="0.62407517239999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="42"/>
                                         <state key="normal" title="+">
@@ -173,7 +173,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3zr-HC-0N9">
-                                        <rect key="frame" x="79.5" y="0.0" width="64.5" height="63"/>
+                                        <rect key="frame" x="66" y="0.0" width="51.5" height="63"/>
                                         <color key="backgroundColor" red="0.87294975829999999" green="0.37112226879999999" blue="0.32504552809999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="42"/>
                                         <state key="normal" title="-">
@@ -184,7 +184,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qMj-Of-bCU">
-                                        <rect key="frame" x="159" y="0.0" width="64" height="63"/>
+                                        <rect key="frame" x="132.5" y="0.0" width="51" height="63"/>
                                         <color key="backgroundColor" red="0.94643473759999996" green="0.64318747399999998" blue="0.12665354140000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="42"/>
                                         <state key="normal" title="=">
@@ -195,7 +195,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SLk-GK-J1n">
-                                        <rect key="frame" x="238" y="0.0" width="64.5" height="63"/>
+                                        <rect key="frame" x="198.5" y="0.0" width="51" height="63"/>
                                         <color key="backgroundColor" systemColor="systemGrayColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="42"/>
                                         <state key="normal" title="×">
@@ -206,7 +206,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tPT-az-sci">
-                                        <rect key="frame" x="317.5" y="0.0" width="64.5" height="63"/>
+                                        <rect key="frame" x="264.5" y="0.0" width="51.5" height="63"/>
                                         <color key="backgroundColor" systemColor="systemRedColor"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="42"/>
                                         <state key="normal" title="÷">
@@ -214,6 +214,17 @@
                                         </state>
                                         <connections>
                                             <action selector="didTapOperatorButton:" destination="eqK-jh-KKu" eventType="touchUpInside" id="C6V-hl-qVm"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="7GC-a2-Ar9">
+                                        <rect key="frame" x="331" y="0.0" width="51" height="63"/>
+                                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="25"/>
+                                        <state key="normal" title="AC">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="tappedACButton" destination="eqK-jh-KKu" eventType="touchUpInside" id="bpM-c6-Vxz"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -251,6 +262,7 @@
                         <outletCollection property="operatorsButtons" destination="qMj-Of-bCU" collectionClass="NSMutableArray" id="4sC-UQ-6wx"/>
                         <outletCollection property="operatorsButtons" destination="SLk-GK-J1n" collectionClass="NSMutableArray" id="K8L-EC-Pch"/>
                         <outletCollection property="operatorsButtons" destination="tPT-az-sci" collectionClass="NSMutableArray" id="nQp-Qy-YzI"/>
+                        <outletCollection property="operatorsButtons" destination="7GC-a2-Ar9" collectionClass="NSMutableArray" id="yke-gX-5mk"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7XP-3c-sJZ" sceneMemberID="firstResponder"/>

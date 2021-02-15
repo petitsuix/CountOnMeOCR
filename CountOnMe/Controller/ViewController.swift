@@ -31,6 +31,9 @@ class ViewController: UIViewController {
         calculation.showErrorDelegate = self
     }
     
+    @IBAction func tappedACButton() {
+        calculation.calculationView = ""
+    }
     
     // View actions
     @IBAction func tappedNumberButton(_ sender: UIButton) {
@@ -80,6 +83,10 @@ extension ViewController: ErrorDelegate {
     
     func errorOperandIsAlreadySet() {
         return error(message: "Un opérateur est déjà mis !")
+    }
+    
+    func errorUnknownOperand() {
+        return error(message: "Erreur")
     }
 }
 
