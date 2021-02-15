@@ -15,6 +15,7 @@ protocol CalculationDelegate: class {
 protocol ErrorDelegate: class {
     func errorNotEnoughElements()
     func errorExpressionIsIncorrect()
+    func errorOperandIsAlreadySet()
 }
 
 class Calculation {
@@ -35,15 +36,11 @@ class Calculation {
     
     // Error check computed variables
     var expressionIsCorrect: Bool {
-        return elements.last != "+" && elements.last != "-"
-    }
-    
-    var expressionHasEnoughElements: Bool {
-        return elements.count >= 3
+        return elements.count >= 3 && elements.last != "+" && elements.last != "-" && elements.last != "×" && elements.last != "×" && elements.last != "÷"
     }
     
     var canAddOperator: Bool {
-        return elements.last != "+" && elements.last != "-"
+        return elements.last != "+" && elements.last != "-" && elements.last != "×" && elements.last != "×" && elements.last != "÷"
     }
     
     var expressionHaveResult: Bool {
@@ -54,7 +51,7 @@ class Calculation {
         if canAddOperator {
             calculationView.append(symbol)
         } else { // Fix error message : Un opérateur est déjà mis !
-            showErrorDelegate?.errorExpressionIsIncorrect()
+            showErrorDelegate?.errorOperandIsAlreadySet()
         }
     }
     
@@ -80,6 +77,11 @@ class Calculation {
     
     func equals() {
         
+        guard expressionIsCorrect else {
+            showErrorDelegate?.errorExpressionIsIncorrect()
+        return
+        }
+        
         var operationsToReduce = elements
         
         while operationsToReduce.count > 1 {
@@ -92,7 +94,7 @@ class Calculation {
             case "+": result = addition(firstNumber: left, secondNumber: right)
             case "-": result = substraction(firstNumber: left, secondNumber: right)
             case "×": result = multiplication(firstNumber: left, secondNumber: right)
-            case "÷": result = multiplication(firstNumber: left, secondNumber: right)
+            case "÷": result = division(firstNumber: left, secondNumber: right)
         //  case "=" where expressionIsIncorrect
             default: fatalError("Unknown operator !")
             }

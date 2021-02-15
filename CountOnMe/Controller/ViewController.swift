@@ -28,6 +28,7 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         calculation.calculationDelegate = self
+        calculation.showErrorDelegate = self
     }
     
     
@@ -52,15 +53,11 @@ class ViewController: UIViewController {
         } else if sender == operatorsButtons[1] {
             calculation.additionOrSubstraction(symbol: " - ")
         } else if sender == operatorsButtons[2] {
-            guard calculation.expressionIsCorrect else {
-                error(message: "Entrez une expression correcte !")
-            return
-            }
-            guard calculation.expressionHasEnoughElements else {
-                error(message: "Démarrez un nouveau calcul !")
-                return
-            }
             calculation.equals()
+        } else if sender == operatorsButtons[3] {
+            calculation.additionOrSubstraction(symbol: " × ")
+        } else if sender == operatorsButtons[4] {
+            calculation.additionOrSubstraction(symbol: " ÷ ")
         }
     }
 }
@@ -78,6 +75,20 @@ extension ViewController: ErrorDelegate {
     }
 
     func errorExpressionIsIncorrect() {
-        return error(message: "Entre une expression correcte !")
+        return error(message: "L'expression n'est pas correcte")
+    }
+    
+    func errorOperandIsAlreadySet() {
+        return error(message: "Un opérateur est déjà mis !")
     }
 }
+
+//extension ViewController: ArithmeticsErrorsHandlingDelegate {
+//
+//    func errorMissingElements() {
+//        return showErrorAlert(title: "Zéro!", message: "Entrez une expression correcte !")
+//    }
+//
+//    func errorNothingToCalculate() {
+//        return showErrorAlert(title: "Zéro!", message: "Démarrez un nouveau calcul !")
+//    }
