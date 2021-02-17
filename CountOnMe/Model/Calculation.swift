@@ -7,7 +7,7 @@
 //
 
 import Foundation
-// n'en faire qu'un seul
+
 protocol CalculationAndErrorDelegates: class {
     func calculationUpdated(_ calcul: String)
     
@@ -46,13 +46,20 @@ class Calculation {
         return elements.last != "+" && elements.last != "-" && elements.last != "×" && elements.last != "×" && elements.last != "÷"
     }
     
-    var expressionHaveResult: Bool {
+    var expressionHasResult: Bool {
         return calculationExpression.firstIndex(of: "=") != nil
     }
     
-    func additionOrSubstraction(symbol: String) {
+    func addNumbers(numbers: String) {
+        if expressionHasResult {
+            calculationExpression = ""
+        }
+        calculationExpression.append(numbers)
+    }
+    
+    func addOperator(symbol: String) {
         if canAddOperator {
-            calculationExpression.append(symbol)
+            calculationExpression.append(" \(symbol) ")
         } else {
             showErrorDelegate?.errorOperandIsAlreadySet()
         }

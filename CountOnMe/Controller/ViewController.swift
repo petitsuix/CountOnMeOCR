@@ -15,8 +15,6 @@ class ViewController: UIViewController {
     
     var calculation = Calculation()
     
-  
-    
     private func error(message: String) {
         let alertVC = UIAlertController(title: "Zéro!", message: message, preferredStyle: .alert)
         alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
@@ -39,28 +37,20 @@ class ViewController: UIViewController {
         calculation.calculationExpression = ""
     }
     
-    
-    
     // View actions
     @IBAction func tappedNumberButton(_ sender: UIButton) {
         guard let numberText = sender.title(for: .normal) else {
             return
         }
-        // à bouger dans le modèle
-        if calculation.expressionHaveResult {
-            calculation.calculationExpression = ""
-        }
-        
-        calculation.calculationExpression.append(numberText)
+        calculation.addNumbers(numbers: numberText)
     }
     
-
-    // FIXME: voir à faire comme dans tappedNumberButton
     @IBAction func didTapOperatorButton(_ sender: UIButton) {
         guard let operatorSymbol = sender.title(for: .normal) else {
             return
         }
-        calculation.calculationExpression.append(" \(operatorSymbol) ")
+        calculation.addOperator(symbol: operatorSymbol)
+        
 //        if sender == operatorsButtons[0] {
 //            calculation.additionOrSubstraction(symbol: " + ")
 //        } else if sender == operatorsButtons[1] {
@@ -82,15 +72,12 @@ extension ViewController: CalculationAndErrorDelegates {
     func errorNotEnoughElements() {
         return error(message: "Il manque certains éléments pour pouvoir effectuer un calcul")
     }
-
     func errorExpressionIsIncorrect() {
         return error(message: "L'expression n'est pas correcte")
     }
-    
     func errorOperandIsAlreadySet() {
         return error(message: "Un opérateur est déjà mis !")
     }
-    
     func errorUnknownOperand() {
         return error(message: "Erreur")
     }
