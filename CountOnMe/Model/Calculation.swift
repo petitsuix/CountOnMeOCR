@@ -7,35 +7,37 @@
 //
 
 import Foundation
-
-protocol CalculationDelegate: class {
+// n'en faire qu'un seul
+protocol CalculationAndErrorDelegates: class {
     func calculationUpdated(_ calcul: String)
-}
-
-protocol ErrorDelegate: class {
+    
+    // func calculationError a base d'enum :
     func errorNotEnoughElements()
     func errorExpressionIsIncorrect()
     func errorOperandIsAlreadySet()
     func errorUnknownOperand()
 }
 
+
 class Calculation {
     
-    var calculationDelegate: CalculationDelegate?
+    var calculationDelegate: CalculationAndErrorDelegates?
     
-    var showErrorDelegate: ErrorDelegate?
+    var showErrorDelegate: CalculationAndErrorDelegates?
     
-    var calculationView: String = "" {
+    var calculationExpression: String = "" {
             didSet {
-                calculationDelegate?.calculationUpdated(calculationView)
+                calculationDelegate?.calculationUpdated(calculationExpression)
             }
         }
     
     var elements: [String] {
-        return calculationView.split(separator: " ").map { "\($0)" }
+        return calculationExpression.split(separator: " ").map { (operand) -> String in
+            return "\(operand)"
+        } //.map { "\($0)" }
     }
     
-    // Error check computed variables
+    // FIXME: ressortir haveEnoughElements
     var expressionIsCorrect: Bool {
         return elements.count >= 3 && elements.last != "+" && elements.last != "-" && elements.last != "×" && elements.last != "×" && elements.last != "÷"
     }
@@ -45,13 +47,13 @@ class Calculation {
     }
     
     var expressionHaveResult: Bool {
-        return calculationView.firstIndex(of: "=") != nil
+        return calculationExpression.firstIndex(of: "=") != nil
     }
     
     func additionOrSubstraction(symbol: String) {
         if canAddOperator {
-            calculationView.append(symbol)
-        } else { // Fix error message : Un opérateur est déjà mis !
+            calculationExpression.append(symbol)
+        } else {
             showErrorDelegate?.errorOperandIsAlreadySet()
         }
     }
@@ -76,7 +78,13 @@ class Calculation {
 //        return "\(result)"
 //    }
     
-    func equals() {
+    // créer une méthode ou on a appuyé sur le bouton "operator"
+    
+    // tappedNumberButton doit être mis sous forme de méthode ici
+    
+    //
+    
+    func equals() { // resolve
         
         guard expressionIsCorrect else {
             showErrorDelegate?.errorExpressionIsIncorrect()
@@ -105,6 +113,6 @@ class Calculation {
             operationsToReduce.insert("\(result)", at: 0)
         }
         
-        calculationView.append(" = \(operationsToReduce.first!)")
+        calculationExpression.append(" = \(operationsToReduce.first!)")
     }
 }

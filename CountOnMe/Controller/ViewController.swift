@@ -31,48 +31,54 @@ class ViewController: UIViewController {
         calculation.showErrorDelegate = self
     }
     
-    @IBAction func tappedACButton() {
-        calculation.calculationView = ""
+    @IBAction func tappedEqualButton() {
+        calculation.equals()
     }
+    
+    @IBAction func tappedACButton() {
+        calculation.calculationExpression = ""
+    }
+    
+    
     
     // View actions
     @IBAction func tappedNumberButton(_ sender: UIButton) {
         guard let numberText = sender.title(for: .normal) else {
             return
         }
-        
+        // à bouger dans le modèle
         if calculation.expressionHaveResult {
-            calculation.calculationView = ""
+            calculation.calculationExpression = ""
         }
         
-        calculation.calculationView.append(numberText)
+        calculation.calculationExpression.append(numberText)
     }
     
 
-    
+    // FIXME: voir à faire comme dans tappedNumberButton
     @IBAction func didTapOperatorButton(_ sender: UIButton) {
-        if sender == operatorsButtons[0] {
-            calculation.additionOrSubstraction(symbol: " + ")
-        } else if sender == operatorsButtons[1] {
-            calculation.additionOrSubstraction(symbol: " - ")
-        } else if sender == operatorsButtons[2] {
-            calculation.equals()
-        } else if sender == operatorsButtons[3] {
-            calculation.additionOrSubstraction(symbol: " × ")
-        } else if sender == operatorsButtons[4] {
-            calculation.additionOrSubstraction(symbol: " ÷ ")
+        guard let operatorSymbol = sender.title(for: .normal) else {
+            return
         }
+        calculation.calculationExpression.append(" \(operatorSymbol) ")
+//        if sender == operatorsButtons[0] {
+//            calculation.additionOrSubstraction(symbol: " + ")
+//        } else if sender == operatorsButtons[1] {
+//            calculation.additionOrSubstraction(symbol: " - ")
+//        } else if sender == operatorsButtons[2] {
+//            calculation.equals() // peut être mettre le égal comme le AC, à part
+//        } else if sender == operatorsButtons[3] {
+//            calculation.additionOrSubstraction(symbol: " × ")
+//        } else if sender == operatorsButtons[4] {
+//            calculation.additionOrSubstraction(symbol: " ÷ ")
+//        }
     }
 }
 
-extension ViewController: CalculationDelegate {
+extension ViewController: CalculationAndErrorDelegates {
     func calculationUpdated(_ calcul: String) {
         textView.text = calcul
     }
-}
-
-extension ViewController: ErrorDelegate {
-
     func errorNotEnoughElements() {
         return error(message: "Il manque certains éléments pour pouvoir effectuer un calcul")
     }
@@ -89,13 +95,3 @@ extension ViewController: ErrorDelegate {
         return error(message: "Erreur")
     }
 }
-
-//extension ViewController: ArithmeticsErrorsHandlingDelegate {
-//
-//    func errorMissingElements() {
-//        return showErrorAlert(title: "Zéro!", message: "Entrez une expression correcte !")
-//    }
-//
-//    func errorNothingToCalculate() {
-//        return showErrorAlert(title: "Zéro!", message: "Démarrez un nouveau calcul !")
-//    }

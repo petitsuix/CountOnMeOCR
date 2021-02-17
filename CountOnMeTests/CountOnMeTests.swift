@@ -11,7 +11,7 @@ import XCTest
 
 class CountOnMeTests: XCTestCase {
     
-    var calculation: Calculation?
+    var calculation: Calculation!
     
     override func setUp() {
         calculation = Calculation()

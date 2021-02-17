@@ -191,7 +191,7 @@
                                             <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </state>
                                         <connections>
-                                            <action selector="didTapOperatorButton:" destination="eqK-jh-KKu" eventType="touchUpInside" id="f0T-bM-nhL"/>
+                                            <action selector="tappedEqualButton" destination="eqK-jh-KKu" eventType="touchUpInside" id="LZh-CL-0XP"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SLk-GK-J1n">
