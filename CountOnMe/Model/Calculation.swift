@@ -10,24 +10,16 @@ import Foundation
 
 protocol CalculationAndErrorDelegates: class {
     func calculationUpdated(_ calcul: String)
-    
-    // func calculationError a base d'enum :
-    func errorNotEnoughElements()
-    func errorExpressionIsIncorrect()
-    func errorOperandIsAlreadySet()
-    func errorUnknownOperand()
+    func calculationError(_ message: String)
 }
-
 
 class Calculation {
     
-    var calculationDelegate: CalculationAndErrorDelegates?
-    
-    var showErrorDelegate: CalculationAndErrorDelegates?
+    var calculationAndErrorDelegates: CalculationAndErrorDelegates!
     
     var calculationExpression: String = "" {
             didSet {
-                calculationDelegate?.calculationUpdated(calculationExpression)
+                calculationAndErrorDelegates?.calculationUpdated(calculationExpression)
             }
         }
     
@@ -50,6 +42,13 @@ class Calculation {
         return calculationExpression.firstIndex(of: "=") != nil
     }
     
+    private enum Errors: String {
+        case notEnoughElements = "Il manque un élément à ce calcul"
+        case errorExpressionIsIncorrect = "Entrez une expression correcte !"
+        case operandIsAlreadySet = "Un opérateur est déjà en place"
+        case errorUnknownOperand = "Opérateur inconnu"
+    }
+    
     func addNumbers(numbers: String) {
         if expressionHasResult {
             calculationExpression = ""
@@ -61,40 +60,14 @@ class Calculation {
         if canAddOperator {
             calculationExpression.append(" \(symbol) ")
         } else {
-            showErrorDelegate?.errorOperandIsAlreadySet()
+            calculationAndErrorDelegates.calculationError(Errors.operandIsAlreadySet.rawValue)
         }
     }
-    
-//    func addition(firstNumber: Int, secondNumber: Int) -> String {
-//        let result = firstNumber + secondNumber
-//        return "\(result)"
-//    }
-//    
-//    func substraction(firstNumber: Int, secondNumber: Int) -> String {
-//        let result = firstNumber - secondNumber
-//        return "\(result)"
-//    }
-//    
-//    func multiplication(firstNumber: Int, secondNumber: Int) -> String {
-//        let result = firstNumber * secondNumber
-//        return "\(result)"
-//    }
-//    
-//    func division(firstNumber: Int, secondNumber: Int) -> String {
-//        let result = firstNumber / secondNumber
-//        return "\(result)"
-//    }
-    
-    // créer une méthode ou on a appuyé sur le bouton "operator"
-    
-    // tappedNumberButton doit être mis sous forme de méthode ici
-    
-    //
     
     func equals() { // resolve
         
         guard expressionIsCorrect else {
-            showErrorDelegate?.errorExpressionIsIncorrect()
+            calculationAndErrorDelegates.calculationError(Errors.errorExpressionIsIncorrect.rawValue)
         return
         }
         
@@ -112,7 +85,7 @@ class Calculation {
             case "×": result = left * right
             case "÷": result = left / right
             default:
-                showErrorDelegate?.errorUnknownOperand()
+                calculationAndErrorDelegates.calculationError(Errors.errorExpressionIsIncorrect.rawValue)
                 return
             }
             

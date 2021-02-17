@@ -14,19 +14,12 @@ class ViewController: UIViewController {
     @IBOutlet var operatorsButtons: [UIButton]!
     
     var calculation = Calculation()
-    
-    private func error(message: String) {
-        let alertVC = UIAlertController(title: "Zéro!", message: message, preferredStyle: .alert)
-        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-        self.present(alertVC, animated: true, completion: nil)
-    }
-    
+
     // View Life cycles
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        calculation.calculationDelegate = self
-        calculation.showErrorDelegate = self
+        calculation.calculationAndErrorDelegates = self
     }
     
     @IBAction func tappedEqualButton() {
@@ -50,35 +43,18 @@ class ViewController: UIViewController {
             return
         }
         calculation.addOperator(symbol: operatorSymbol)
-        
-//        if sender == operatorsButtons[0] {
-//            calculation.additionOrSubstraction(symbol: " + ")
-//        } else if sender == operatorsButtons[1] {
-//            calculation.additionOrSubstraction(symbol: " - ")
-//        } else if sender == operatorsButtons[2] {
-//            calculation.equals() // peut être mettre le égal comme le AC, à part
-//        } else if sender == operatorsButtons[3] {
-//            calculation.additionOrSubstraction(symbol: " × ")
-//        } else if sender == operatorsButtons[4] {
-//            calculation.additionOrSubstraction(symbol: " ÷ ")
-//        }
     }
 }
 
 extension ViewController: CalculationAndErrorDelegates {
+  
     func calculationUpdated(_ calcul: String) {
         textView.text = calcul
     }
-    func errorNotEnoughElements() {
-        return error(message: "Il manque certains éléments pour pouvoir effectuer un calcul")
-    }
-    func errorExpressionIsIncorrect() {
-        return error(message: "L'expression n'est pas correcte")
-    }
-    func errorOperandIsAlreadySet() {
-        return error(message: "Un opérateur est déjà mis !")
-    }
-    func errorUnknownOperand() {
-        return error(message: "Erreur")
+
+    func calculationError(_ message: String) {
+        let alertVC = UIAlertController(title: "Zéro!", message: message, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        self.present(alertVC, animated: true, completion: nil)
     }
 }
