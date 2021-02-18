@@ -29,13 +29,17 @@ class Calculation {
         } //.map { "\($0)" }
     }
     
+    var haveEnoughElements: Bool {
+        return elements.count >= 3
+    }
+    
     // FIXME: ressortir haveEnoughElements
     var expressionIsCorrect: Bool {
-        return elements.count >= 3 && elements.last != "+" && elements.last != "-" && elements.last != "×" && elements.last != "×" && elements.last != "÷"
+        return elements.last != "+" && elements.last != "-" && elements.last != "×" && elements.last != "÷"
     }
     
     var canAddOperator: Bool {
-        return elements.last != "+" && elements.last != "-" && elements.last != "×" && elements.last != "×" && elements.last != "÷"
+        return elements.last != "+" && elements.last != "-" && elements.last != "×" && elements.last != "÷"
     }
     
     var expressionHasResult: Bool {
@@ -68,6 +72,11 @@ class Calculation {
         
         guard expressionIsCorrect else {
             calculationAndErrorDelegates.calculationError(Errors.errorExpressionIsIncorrect.rawValue)
+        return
+        }
+        
+        guard haveEnoughElements else {
+            calculationAndErrorDelegates.calculationError(Errors.notEnoughElements.rawValue)
         return
         }
         
