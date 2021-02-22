@@ -23,42 +23,103 @@ class CountOnMeTests: XCTestCase {
     
     func testGivenFirstNumberIs5AndSecondNumberIs2_WhenAdditioning_ThenResultIs7() {
         // Given :
-        let firstNumber = 5
-        let secondNumber = 2
+        calculation.addNumbers(numbers: "5")
+        calculation.addOperator(symbol: "+")
+        calculation.addNumbers(numbers: "2")
         // When :
-        let result = calculation?.addition(firstNumber: firstNumber, secondNumber: secondNumber)
+        calculation.equals()
         // Then :
-        XCTAssertEqual(result, "7")
+        XCTAssertEqual(calculation.calculationResult, "7.0")
+        XCTAssertTrue(calculation.expressionIsCorrect)
+        XCTAssertTrue(calculation.haveEnoughElements)
+        XCTAssertTrue(calculation.canAddOperator)
+        XCTAssertTrue(calculation.expressionHasResult)
+    }
+    
+    func testGivenThereIsAResult_WhenAddingNewNumber_ThenCalculationExpressionIsCleared() {
+        // Given :
+        calculation.addNumbers(numbers: "5")
+        calculation.addOperator(symbol: "+")
+        calculation.addNumbers(numbers: "2")
+        calculation.equals()
+        // When :
+        calculation.addNumbers(numbers: "12")
+        // Then :
+        XCTAssertEqual(calculation.calculationExpression, "12")
     }
     
     func testGivenFirstNumberIs3AndSecondNumberIs2_WhenSubstracting_ThenResultIs1() {
         // Given :
-        let firstNumber = 3
-        let secondNumber = 2
+        calculation.addNumbers(numbers: "3")
+        calculation.addOperator(symbol: "-")
+        calculation.addNumbers(numbers: "2")
         // When :
-        let result = calculation?.substraction(firstNumber: firstNumber, secondNumber: secondNumber)
+        calculation.equals()
         // Then :
-        XCTAssertEqual(result, "1")
+        XCTAssertEqual(calculation.calculationResult, "1.0")
     }
     
     func testGivenFirstNumberIs3AndSecondNumberIs2_WhenMultiplicating_ThenResultIs6() {
         // Given :
-        let firstNumber = 3
-        let secondNumber = 2
+        calculation.addNumbers(numbers: "3")
+        calculation.addOperator(symbol: "×")
+        calculation.addNumbers(numbers: "2")
         // When :
-        let result = calculation?.multiplication(firstNumber: firstNumber, secondNumber: secondNumber)
+        calculation.equals()
         // Then :
-        XCTAssertEqual(result, "6")
+        XCTAssertEqual(calculation.calculationExpression, "3 × 2 = 6.0")
     }
     
     func testGivenFirstNumberIs6AndSecondNumberIs2_WhenDividing_ThenResultIs3() {
         // Given :
-        let firstNumber = 6
-        let secondNumber = 2
+        calculation.addNumbers(numbers: "6")
+        calculation.addOperator(symbol: "÷")
+        calculation.addNumbers(numbers: "2")
         // When :
-        let result = calculation?.division(firstNumber: firstNumber, secondNumber: secondNumber)
+        calculation.equals()
         // Then :
-        XCTAssertEqual(result, "3")
+        XCTAssertEqual(calculation.calculationResult, "3.0")
     }
     
+    func testGivenFirstElementIs4AndSecondElementIsPlus_WhenTypingPlusAgain_ThenCantAddExtraOperator() {
+        // Given
+        calculation.addNumbers(numbers: "4")
+        calculation.addOperator(symbol: "+")
+        // When
+        calculation.addOperator(symbol: "+")
+        // Then :
+        XCTAssertFalse(calculation.canAddOperator)
+    }
+    
+    func testGivenThereIsNotEnoughElements_WhenTypingEqualButton_ThenHaveEnoughElementsIsFalse() {
+        // Given
+        calculation.addNumbers(numbers: "4")
+        calculation.addOperator(symbol: "+")
+        // When
+        calculation.equals()
+        // Then :
+        XCTAssertFalse(calculation.haveEnoughElements)
+    }
+    
+    func testGivenAnOpeartorIsTheLastElementTyped_WhenTypingEqualButton_ThenOperationIsCorrectIsFalse() {
+        // Given
+        calculation.addNumbers(numbers: "4")
+        calculation.addOperator(symbol: "+")
+        calculation.addNumbers(numbers: "2")
+        calculation.addOperator(symbol: "+")
+        // When
+        calculation.equals()
+        // Then :
+        XCTAssertFalse(calculation.expressionIsCorrect)
+    }
+    
+//    func testGivenThereIsAResultAlready_WhenTypingEqualButtonAgain_ThenExpressionIsCorrectIsFalse() {
+//        // Given
+//        calculation.calculationResult = "6 + 2 = 8.0"
+//        // When
+//        calculation.equals()
+//        // Then
+//        XCTAssert()
+//    }
+    // XCTAssert(operand = nil)
 }

@@ -10,9 +10,7 @@ import UIKit
 
 class ViewController: UIViewController {
     @IBOutlet weak var textView: UITextView!
-    @IBOutlet var numberButtons: [UIButton]!
-    @IBOutlet var operatorsButtons: [UIButton]!
-    
+
     var calculation = Calculation()
 
     // View Life cycles
@@ -27,7 +25,7 @@ class ViewController: UIViewController {
     }
     
     @IBAction func tappedACButton() {
-        calculation.calculationExpression = ""
+        calculation.resetCalculationExpression()
     }
     
     // View actions

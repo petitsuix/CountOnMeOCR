@@ -15,7 +15,7 @@ protocol CalculationAndErrorDelegates: class {
 
 class Calculation {
     
-    var calculationAndErrorDelegates: CalculationAndErrorDelegates!
+    var calculationAndErrorDelegates: CalculationAndErrorDelegates?
     
     var calculationExpression: String = "" {
             didSet {
@@ -28,6 +28,8 @@ class Calculation {
             return "\(operand)"
         } //.map { "\($0)" }
     }
+    
+    var calculationResult: String = ""
     
     var haveEnoughElements: Bool {
         return elements.count >= 3
@@ -46,16 +48,20 @@ class Calculation {
         return calculationExpression.firstIndex(of: "=") != nil
     }
     
-    private enum Errors: String {
+    enum Errors: String {
         case notEnoughElements = "Il manque un élément à ce calcul"
         case errorExpressionIsIncorrect = "Entrez une expression correcte !"
         case operandIsAlreadySet = "Un opérateur est déjà en place"
         case errorUnknownOperand = "Opérateur inconnu"
     }
     
+    func resetCalculationExpression() {
+            calculationExpression = ""
+    }
+    
     func addNumbers(numbers: String) {
         if expressionHasResult {
-            calculationExpression = ""
+        resetCalculationExpression()
         }
         calculationExpression.append(numbers)
     }
@@ -64,19 +70,19 @@ class Calculation {
         if canAddOperator {
             calculationExpression.append(" \(symbol) ")
         } else {
-            calculationAndErrorDelegates.calculationError(Errors.operandIsAlreadySet.rawValue)
+            calculationAndErrorDelegates?.calculationError(Errors.operandIsAlreadySet.rawValue)
         }
     }
     
     func equals() { // resolve
         
-        guard expressionIsCorrect else {
-            calculationAndErrorDelegates.calculationError(Errors.errorExpressionIsIncorrect.rawValue)
+        guard haveEnoughElements else {
+            calculationAndErrorDelegates?.calculationError(Errors.notEnoughElements.rawValue)
         return
         }
         
-        guard haveEnoughElements else {
-            calculationAndErrorDelegates.calculationError(Errors.notEnoughElements.rawValue)
+        guard expressionIsCorrect else {
+            calculationAndErrorDelegates?.calculationError(Errors.errorExpressionIsIncorrect.rawValue)
         return
         }
         
@@ -87,19 +93,18 @@ class Calculation {
             let operand = operationsToReduce[1]
             let right = Double(operationsToReduce[2])!
             
-            var result: Double = 0.00
             switch operand {
-            case "+": result = left + right
-            case "-": result = left - right
-            case "×": result = left * right
-            case "÷": result = left / right
+            case "+": calculationResult = "\(left + right)"
+            case "-": calculationResult = "\(left - right)"
+            case "×": calculationResult = "\(left * right)"
+            case "÷": calculationResult = "\(left / right)"
             default:
-                calculationAndErrorDelegates.calculationError(Errors.errorExpressionIsIncorrect.rawValue)
+                calculationAndErrorDelegates?.calculationError(Errors.errorExpressionIsIncorrect.rawValue)
                 return
             }
             
             operationsToReduce = Array(operationsToReduce.dropFirst(3))
-            operationsToReduce.insert("\(result)", at: 0)
+            operationsToReduce.insert("\(calculationResult)", at: 0)
         }
         
         calculationExpression.append(" = \(operationsToReduce.first!)")
