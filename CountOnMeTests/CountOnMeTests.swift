@@ -21,6 +21,7 @@ class CountOnMeTests: XCTestCase {
         calculation = nil
     }
     
+    // Testing addition, testing that all conditions are met
     func testGivenFirstNumberIs5AndSecondNumberIs2_WhenAdditioning_ThenResultIs7() {
         // Given :
         calculation.addNumbers(numbers: "5")
@@ -36,6 +37,43 @@ class CountOnMeTests: XCTestCase {
         XCTAssertTrue(calculation.expressionHasResult)
     }
     
+    // Testing substraction
+    func testGivenFirstNumberIs3AndSecondNumberIs2_WhenSubstracting_ThenResultIs1() {
+        // Given :
+        calculation.addNumbers(numbers: "3")
+        calculation.addOperator(symbol: "-")
+        calculation.addNumbers(numbers: "2")
+        // When :
+        calculation.equals()
+        // Then :
+        XCTAssertEqual(calculation.calculationResult, "1.0")
+    }
+    
+    // Testing multiplication
+    func testGivenFirstNumberIs3AndSecondNumberIs2_WhenMultiplicating_ThenResultIs6() {
+        // Given :
+        calculation.addNumbers(numbers: "3")
+        calculation.addOperator(symbol: "×")
+        calculation.addNumbers(numbers: "2")
+        // When :
+        calculation.equals()
+        // Then :
+        XCTAssertEqual(calculation.calculationExpression, "3 × 2 = 6.0")
+    }
+    
+    // Testing division
+    func testGivenFirstNumberIs6AndSecondNumberIs2_WhenDividing_ThenResultIs3() {
+        // Given :
+        calculation.addNumbers(numbers: "6")
+        calculation.addOperator(symbol: "÷")
+        calculation.addNumbers(numbers: "2")
+        // When :
+        calculation.equals()
+        // Then :
+        XCTAssertEqual(calculation.calculationResult, "3.0")
+    }
+    
+    // Clear expression before new calculation : this test makes sure that after a calculation, if the user types a number again, the old calculation is cleared and only the new elements show.
     func testGivenThereIsAResult_WhenAddingNewNumber_ThenCalculationExpressionIsCleared() {
         // Given :
         calculation.addNumbers(numbers: "5")
@@ -48,39 +86,7 @@ class CountOnMeTests: XCTestCase {
         XCTAssertEqual(calculation.calculationExpression, "12")
     }
     
-    func testGivenFirstNumberIs3AndSecondNumberIs2_WhenSubstracting_ThenResultIs1() {
-        // Given :
-        calculation.addNumbers(numbers: "3")
-        calculation.addOperator(symbol: "-")
-        calculation.addNumbers(numbers: "2")
-        // When :
-        calculation.equals()
-        // Then :
-        XCTAssertEqual(calculation.calculationResult, "1.0")
-    }
-    
-    func testGivenFirstNumberIs3AndSecondNumberIs2_WhenMultiplicating_ThenResultIs6() {
-        // Given :
-        calculation.addNumbers(numbers: "3")
-        calculation.addOperator(symbol: "×")
-        calculation.addNumbers(numbers: "2")
-        // When :
-        calculation.equals()
-        // Then :
-        XCTAssertEqual(calculation.calculationExpression, "3 × 2 = 6.0")
-    }
-    
-    func testGivenFirstNumberIs6AndSecondNumberIs2_WhenDividing_ThenResultIs3() {
-        // Given :
-        calculation.addNumbers(numbers: "6")
-        calculation.addOperator(symbol: "÷")
-        calculation.addNumbers(numbers: "2")
-        // When :
-        calculation.equals()
-        // Then :
-        XCTAssertEqual(calculation.calculationResult, "3.0")
-    }
-    
+    // Testing that "canAddOperator" turns false, so that the "operandIsAlreadySet" error shows when typing "+" twice in a row
     func testGivenFirstElementIs4AndSecondElementIsPlus_WhenTypingPlusAgain_ThenCantAddExtraOperator() {
         // Given
         calculation.addNumbers(numbers: "4")
@@ -91,6 +97,7 @@ class CountOnMeTests: XCTestCase {
         XCTAssertFalse(calculation.canAddOperator)
     }
     
+    // Testing that "haveEnoughElements" turns false, so that the "notEnoughElements" error shows when typing "=" before writing a complete formulation
     func testGivenThereIsNotEnoughElements_WhenTypingEqualButton_ThenHaveEnoughElementsIsFalse() {
         // Given
         calculation.addNumbers(numbers: "4")
@@ -101,6 +108,7 @@ class CountOnMeTests: XCTestCase {
         XCTAssertFalse(calculation.haveEnoughElements)
     }
     
+    // Testing that "expressionIsCorrect" turns false, so that the "expressionIsIncorrect" error shows when typing "=" without writing a valid operation
     func testGivenAnOpeartorIsTheLastElementTyped_WhenTypingEqualButton_ThenOperationIsCorrectIsFalse() {
         // Given
         calculation.addNumbers(numbers: "4")
@@ -113,6 +121,27 @@ class CountOnMeTests: XCTestCase {
         XCTAssertFalse(calculation.expressionIsCorrect)
     }
     
+    func testGivenThereIsAResult_WhenTypingEqualAgain_ThenSwitchFallsIntoDefaultAndErrorShows() {
+        // Given
+        calculation.calculationExpression = "4 + 4 = 8.0"
+        // When
+        calculation.equals()
+        // Then
+        XCTAssertTrue(calculation.expressionHasResult)
+    }
+    
+    func testGivenCalculationHasAdditionAndMultiplicationOperators_WhenTypingEquals_ThenCalculationIsExecutedWithPriorities() {
+        // Given
+        calculation.addNumbers(numbers: "4")
+        calculation.addOperator(symbol: "+")
+        calculation.addNumbers(numbers: "2")
+        calculation.addOperator(symbol: "×")
+        calculation.addNumbers(numbers: "3")
+        // When
+        calculation.equals()
+        // Then
+        XCTAssertEqual(calculation.calculationResult, "10.0")
+    }
 //    func testGivenThereIsAResultAlready_WhenTypingEqualButtonAgain_ThenExpressionIsCorrectIsFalse() {
 //        // Given
 //        calculation.calculationResult = "6 + 2 = 8.0"

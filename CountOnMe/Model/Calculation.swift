@@ -18,10 +18,10 @@ class Calculation {
     var calculationAndErrorDelegates: CalculationAndErrorDelegates?
     
     var calculationExpression: String = "" {
-            didSet {
-                calculationAndErrorDelegates?.calculationUpdated(calculationExpression)
-            }
+        didSet {
+            calculationAndErrorDelegates?.calculationUpdated(calculationExpression)
         }
+    }
     
     var elements: [String] {
         return calculationExpression.split(separator: " ").map { (operand) -> String in
@@ -52,16 +52,16 @@ class Calculation {
         case notEnoughElements = "Il manque un élément à ce calcul"
         case errorExpressionIsIncorrect = "Entrez une expression correcte !"
         case operandIsAlreadySet = "Un opérateur est déjà en place"
-        case errorUnknownOperand = "Opérateur inconnu"
+        case haveResultAlready = "Faites un nouveau calcul !"
     }
     
     func resetCalculationExpression() {
-            calculationExpression = ""
+        calculationExpression = ""
     }
     
     func addNumbers(numbers: String) {
         if expressionHasResult {
-        resetCalculationExpression()
+            resetCalculationExpression()
         }
         calculationExpression.append(numbers)
     }
@@ -75,15 +75,14 @@ class Calculation {
     }
     
     func equals() { // resolve
-        
         guard haveEnoughElements else {
             calculationAndErrorDelegates?.calculationError(Errors.notEnoughElements.rawValue)
-        return
+            return
         }
         
         guard expressionIsCorrect else {
             calculationAndErrorDelegates?.calculationError(Errors.errorExpressionIsIncorrect.rawValue)
-        return
+            return
         }
         
         var operationsToReduce = elements
@@ -99,14 +98,14 @@ class Calculation {
             case "×": calculationResult = "\(left * right)"
             case "÷": calculationResult = "\(left / right)"
             default:
-                calculationAndErrorDelegates?.calculationError(Errors.errorExpressionIsIncorrect.rawValue)
-                return
+                if expressionHasResult {
+                    calculationAndErrorDelegates?.calculationError(Errors.haveResultAlready.rawValue)
+                    return
+                }
             }
-            
             operationsToReduce = Array(operationsToReduce.dropFirst(3))
             operationsToReduce.insert("\(calculationResult)", at: 0)
         }
-        
         calculationExpression.append(" = \(operationsToReduce.first!)")
     }
 }
