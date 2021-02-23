@@ -130,9 +130,11 @@ class CountOnMeTests: XCTestCase {
         XCTAssertTrue(calculation.expressionHasResult)
     }
     
-    func testGivenCalculationHasAdditionAndMultiplicationOperators_WhenTypingEquals_ThenCalculationIsExecutedWithPriorities() {
+    func testGivenCalculationHasPriorityOperators_WhenTypingEquals_ThenCalculationIsExecutedByPriorityOrder() {
         // Given
         calculation.addNumbers(numbers: "4")
+        calculation.addOperator(symbol: "÷")
+        calculation.addNumbers(numbers: "2")
         calculation.addOperator(symbol: "+")
         calculation.addNumbers(numbers: "2")
         calculation.addOperator(symbol: "×")
@@ -140,7 +142,7 @@ class CountOnMeTests: XCTestCase {
         // When
         calculation.equals()
         // Then
-        XCTAssertEqual(calculation.calculationResult, "10.0")
+        XCTAssertEqual(calculation.calculationResult, "8.0")
     }
 //    func testGivenThereIsAResultAlready_WhenTypingEqualButtonAgain_ThenExpressionIsCorrectIsFalse() {
 //        // Given
