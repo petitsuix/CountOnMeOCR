@@ -74,10 +74,6 @@ class Calculation {
         }
     }
     
-    func calculateMultiplicationDivisionFirst() {
-        
-    }
-    
     func equals() { // resolve
         guard haveEnoughElements else {
             calculationAndErrorDelegates?.calculationError(Errors.notEnoughElements.rawValue)
@@ -91,41 +87,41 @@ class Calculation {
         
         var operationsToReduce = elements
         
-            
-            while operationsToReduce.contains("×") || operationsToReduce.contains("÷") {
         
-                for element in operationsToReduce {
-                    
-                    if element == "×" {
-                        
-                        let left = operationsToReduce[operationsToReduce.firstIndex(of: element)!-1]
-                        let right = operationsToReduce[operationsToReduce.firstIndex(of: element)!+1]
-                        
-                        calculationResult = "\(Double(left)! * Double(right)!)"
-                    
-                        operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!+1)
-                        operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!-1)
-                        operationsToReduce.insert(calculationResult, at:  operationsToReduce.firstIndex(of: element)!)
-                        operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!)
-                        
-                    
-                    } else if element == "÷" {
-                        let left = operationsToReduce[operationsToReduce.firstIndex(of: element)!-1]
-                        let right = operationsToReduce[operationsToReduce.firstIndex(of: element)!+1]
-                        
-                        calculationResult = "\(Double(left)! / Double(right)!)"
-                    
-                        operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!+1)
-                        operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!-1)
-                        operationsToReduce.insert(calculationResult, at:  operationsToReduce.firstIndex(of: element)!)
-                        operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!)
-                        
-                    }
-                }
+        while operationsToReduce.contains("×") || operationsToReduce.contains("÷") {
+            
+            for element in operationsToReduce {
                 
+                if element == "×" {
+                    
+                    let left = operationsToReduce[operationsToReduce.firstIndex(of: element)!-1]
+                    let right = operationsToReduce[operationsToReduce.firstIndex(of: element)!+1]
+                    
+                    calculationResult = "\(Double(left)! * Double(right)!)"
+                    
+                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!+1)
+                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!-1)
+                    operationsToReduce.insert(calculationResult, at:  operationsToReduce.firstIndex(of: element)!)
+                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!)
+                    
+                    
+                } else if element == "÷" {
+                    let left = operationsToReduce[operationsToReduce.firstIndex(of: element)!-1]
+                    let right = operationsToReduce[operationsToReduce.firstIndex(of: element)!+1]
+                    
+                    calculationResult = "\(Double(left)! / Double(right)!)"
+                    
+                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!+1)
+                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!-1)
+                    operationsToReduce.insert(calculationResult, at:  operationsToReduce.firstIndex(of: element)!)
+                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!)
+                    
+                }
             }
-
-            while operationsToReduce.count >= 3 {
+            
+        }
+        
+        while operationsToReduce.count >= 3 {
             let left = Double(operationsToReduce[0])!
             let operand = operationsToReduce[1]
             let right = Double(operationsToReduce[2])!
@@ -133,8 +129,8 @@ class Calculation {
             switch operand {
             case "+": calculationResult = "\(left + right)"
             case "-": calculationResult = "\(left - right)"
-//            case "×": calculationResult = "\(left * right)"
-//            case "÷": calculationResult = "\(left / right)"
+            //            case "×": calculationResult = "\(left * right)"
+            //            case "÷": calculationResult = "\(left / right)"
             default:
                 if expressionHasResult {
                     calculationAndErrorDelegates?.calculationError(Errors.haveResultAlready.rawValue)
