@@ -82,19 +82,19 @@ class Calculation {
         if canAddOperator {
             calculationExpression.append(" \(symbol) ")
         } else {
-            calculationExpression = "Erreur"
+            calculationExpression = "= Erreur"
         }
     }
     
     func equals() { // resolve
         
         guard haveEnoughElements else {
-            calculationExpression = "Erreur"
+            calculationExpression = "= Erreur"
             return
         }
         
         guard expressionIsCorrect else {
-            calculationExpression = "Erreur"
+            calculationExpression = "= Erreur"
             return
         }
         
@@ -125,6 +125,7 @@ class Calculation {
                     let right = operationsToReduce[operationsToReduce.firstIndex(of: element)!+1]
                     if right == "0" {
                         notifyErrorDivisionByZero()
+                        calculationExpression = "= N/A"
                         return
                     }
                     calculationResult = "\(Double(left)! / Double(right)!)"
@@ -149,7 +150,7 @@ class Calculation {
             case "-": calculationResult = "\(left - right)"
             default:
                 if expressionHasResult {
-                    calculationExpression = "Erreur"
+                    calculationExpression = "= Erreur"
                 }
                 return
             }

@@ -94,7 +94,7 @@ class CountOnMeTests: XCTestCase {
         // When
         calculation.addOperator(symbol: "+")
         // Then :
-        XCTAssertFalse(calculation.canAddOperator)
+        XCTAssertEqual(calculation.calculationExpression, "= Erreur")
     }
     
     // Testing that "haveEnoughElements" turns false, so that the "notEnoughElements" error shows when typing "=" before writing a complete formulation
@@ -118,7 +118,7 @@ class CountOnMeTests: XCTestCase {
         // When
         calculation.equals()
         // Then :
-        XCTAssertFalse(calculation.expressionIsCorrect)
+        XCTAssertEqual(calculation.calculationExpression, "= Erreur")
     }
     
     func testGivenThereIsAResult_WhenTypingEqualAgain_ThenSwitchFallsIntoDefaultAndErrorShows() {
@@ -127,10 +127,10 @@ class CountOnMeTests: XCTestCase {
         // When
         calculation.equals()
         // Then
-        XCTAssertTrue(calculation.expressionHasResult)
+        XCTAssertEqual(calculation.calculationExpression, "= Erreur")
     }
     
-    func DISABLEDtestGivenCalculationHasPriorityOperators_WhenTypingEquals_ThenCalculationIsExecutedByPriorityOrder() {
+    func testGivenCalculationHasPriorityOperators_WhenTypingEquals_ThenCalculationIsExecutedByPriorityOrder() {
         // Given
         calculation.addNumbers(numbers: "4")
         calculation.addOperator(symbol: "÷")
@@ -146,14 +146,23 @@ class CountOnMeTests: XCTestCase {
     }
     
     // Faire test attester que la textView peut bien display des virgules
+    func testGivenOperationIsFiveDividedByTwo_WhenTypingEqual_ThenResultShownWillHaveDecimal() {
+        // Given:
+        calculation.addNumbers(numbers: "5")
+        calculation.addOperator(symbol: "÷")
+        calculation.addNumbers(numbers: "2")
+        // When:
+        calculation.equals()
+        // Then:
+        XCTAssertEqual(calculation.calculationResult, "2.5")
+    }
     
-//    func testGivenThereIsAResultAlready_WhenTypingEqualButtonAgain_ThenExpressionIsCorrectIsFalse() {
-//        // Given
-//        calculation.calculationResult = "6 + 2 = 8.0"
-//        // When
-//        calculation.equals()
-//        // Then
-//        XCTAssert()
-//    }
-    // XCTAssert(operand = nil)
+    func testGivenOperationIsFourDividedByZero_WhenTypingEqual_ThenErrorNotApplicable() {
+        // Given:
+        calculation.calculationExpression = "5 ÷ 0"
+        // When:
+        calculation.equals()
+        // Then:
+        XCTAssertEqual(calculation.calculationExpression, "= N/A")
+    }
 }
