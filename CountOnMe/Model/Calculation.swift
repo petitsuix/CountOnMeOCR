@@ -8,21 +8,34 @@
 
 import Foundation
 
-protocol CalculationAndErrorDelegates: class {
-    func calculationUpdated(_ calcul: String)
-    func calculationError(_ message: String)
-}
+// MARK: - Protocols
+
 
 class Calculation {
     
-    var calculationAndErrorDelegates: CalculationAndErrorDelegates?
+    // MARK: - Instanciated Calculation and Error delegates
     
+    
+    // MARK: - Instanciated textView
     var calculationExpression: String = "" {
         didSet {
-            calculationAndErrorDelegates?.calculationUpdated(calculationExpression)
+            //            calculationAndErrorDelegates?.calculationUpdated(calculationExpression)
+            notifyCalculationUpdated()
         }
     }
     
+    private func notifyErrorDivisionByZero() {
+        let notificationName = NSNotification.Name(rawValue: "calculation error")
+        let notification = Notification(name: notificationName)
+        NotificationCenter.default.post(notification)
+    }
+    
+    private func notifyCalculationUpdated() {
+        let notificationName = NSNotification.Name(rawValue: "calculation updated")
+        let notification = Notification(name: notificationName)
+        NotificationCenter.default.post(notification)
+    }
+    // MARK: - Properties
     var elements: [String] {
         return calculationExpression.split(separator: " ").map { (operand) -> String in
             return "\(operand)"
@@ -35,7 +48,6 @@ class Calculation {
         return elements.count >= 3
     }
     
-    // FIXME: ressortir haveEnoughElements
     var expressionIsCorrect: Bool {
         return elements.last != "+" && elements.last != "-" && elements.last != "×" && elements.last != "÷"
     }
@@ -70,20 +82,23 @@ class Calculation {
         if canAddOperator {
             calculationExpression.append(" \(symbol) ")
         } else {
-            calculationAndErrorDelegates?.calculationError(Errors.operandIsAlreadySet.rawValue)
+            calculationExpression = "Erreur"
         }
     }
     
     func equals() { // resolve
+        
         guard haveEnoughElements else {
-            calculationAndErrorDelegates?.calculationError(Errors.notEnoughElements.rawValue)
+            calculationExpression = "Erreur"
             return
         }
         
         guard expressionIsCorrect else {
-            calculationAndErrorDelegates?.calculationError(Errors.errorExpressionIsIncorrect.rawValue)
+            calculationExpression = "Erreur"
             return
         }
+        
+        
         
         var operationsToReduce = elements
         
@@ -108,7 +123,10 @@ class Calculation {
                 } else if element == "÷" {
                     let left = operationsToReduce[operationsToReduce.firstIndex(of: element)!-1]
                     let right = operationsToReduce[operationsToReduce.firstIndex(of: element)!+1]
-                    
+                    if right == "0" {
+                        notifyErrorDivisionByZero()
+                        return
+                    }
                     calculationResult = "\(Double(left)! / Double(right)!)"
                     
                     operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!+1)
@@ -129,11 +147,9 @@ class Calculation {
             switch operand {
             case "+": calculationResult = "\(left + right)"
             case "-": calculationResult = "\(left - right)"
-            //            case "×": calculationResult = "\(left * right)"
-            //            case "÷": calculationResult = "\(left / right)"
             default:
                 if expressionHasResult {
-                    calculationAndErrorDelegates?.calculationError(Errors.haveResultAlready.rawValue)
+                    calculationExpression = "Erreur"
                 }
                 return
             }
