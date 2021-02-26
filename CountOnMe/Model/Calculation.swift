@@ -60,13 +60,6 @@ class Calculation {
         return calculationExpression.firstIndex(of: "=") != nil
     }
     
-    enum Errors: String {
-        case notEnoughElements = "Il manque un élément à ce calcul"
-        case errorExpressionIsIncorrect = "Entrez une expression correcte !"
-        case operandIsAlreadySet = "Un opérateur est déjà en place"
-        case haveResultAlready = "Faites un nouveau calcul !"
-    }
-    
     func resetCalculationExpression() {
         calculationExpression = ""
     }
@@ -86,8 +79,7 @@ class Calculation {
         }
     }
     
-    func equals() { // resolve
-        
+    func equals() { // resolve calculation
         guard haveEnoughElements else {
             calculationExpression = "= Erreur"
             return
@@ -98,17 +90,19 @@ class Calculation {
             return
         }
         
-        
-        
         var operationsToReduce = elements
         
+        if operationsToReduce[0] == "-" {
+            operationsToReduce[0] = "\(operationsToReduce[0])\(operationsToReduce[1])"
+            operationsToReduce.remove(at: 1)
+        }
         
         while operationsToReduce.contains("×") || operationsToReduce.contains("÷") {
             
             for element in operationsToReduce {
                 
-                if element == "×" {
-                    
+                switch element {
+                case "×" :
                     let left = operationsToReduce[operationsToReduce.firstIndex(of: element)!-1]
                     let right = operationsToReduce[operationsToReduce.firstIndex(of: element)!+1]
                     
@@ -116,11 +110,9 @@ class Calculation {
                     
                     operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!+1)
                     operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!-1)
-                    operationsToReduce.insert(calculationResult, at:  operationsToReduce.firstIndex(of: element)!)
+                    operationsToReduce.insert(calculationResult, at: operationsToReduce.firstIndex(of: element)!)
                     operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!)
-                    
-                    
-                } else if element == "÷" {
+                case "÷" :
                     let left = operationsToReduce[operationsToReduce.firstIndex(of: element)!-1]
                     let right = operationsToReduce[operationsToReduce.firstIndex(of: element)!+1]
                     if right == "0" {
@@ -134,8 +126,37 @@ class Calculation {
                     operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!-1)
                     operationsToReduce.insert(calculationResult, at:  operationsToReduce.firstIndex(of: element)!)
                     operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!)
-                    
+                default :
+                    break
                 }
+                
+//                if element == "×" {
+//
+//                    let left = operationsToReduce[operationsToReduce.firstIndex(of: element)!-1]
+//                    let right = operationsToReduce[operationsToReduce.firstIndex(of: element)!+1]
+//
+//                    calculationResult = "\(Double(left)! * Double(right)!)"
+//
+//                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!+1)
+//                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!-1)
+//                    operationsToReduce.insert(calculationResult, at: operationsToReduce.firstIndex(of: element)!)
+//                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!)
+//
+//                } else if element == "÷" {
+//                    let left = operationsToReduce[operationsToReduce.firstIndex(of: element)!-1]
+//                    let right = operationsToReduce[operationsToReduce.firstIndex(of: element)!+1]
+//                    if right == "0" {
+//                        notifyErrorDivisionByZero()
+//                        calculationExpression = "= N/A"
+//                        return
+//                    }
+//                    calculationResult = "\(Double(left)! / Double(right)!)"
+//
+//                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!+1)
+//                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!-1)
+//                    operationsToReduce.insert(calculationResult, at:  operationsToReduce.firstIndex(of: element)!)
+//                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!)
+//                }
             }
             
         }
