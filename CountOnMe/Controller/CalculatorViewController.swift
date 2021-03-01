@@ -53,21 +53,4 @@ class CalculatorViewController: UIViewController {
         guard let operatorSymbol = sender.title(for: .normal) else { return }
         calculation.addOperator(symbol: operatorSymbol)
     }
-
-    
 }
-
-//extension CalculatorViewController: CalculationAndErrorDelegates {
-//
-////    func calculationUpdated(_ calcul: String) {
-////        textView.text = calcul
-////    }
-//
-//
-//
-//    func calculationError(_ message: String) {
-//        let alertVC = UIAlertController(title: "Zéro!", message: message, preferredStyle: .alert)
-//        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-//        self.present(alertVC, animated: true, completion: nil)
-//    }
-//}

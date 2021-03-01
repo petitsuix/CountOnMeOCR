@@ -73,7 +73,7 @@ class CountOnMeTests: XCTestCase {
         XCTAssertEqual(calculation.calculationResult, "3.0")
     }
     
-    // Clear expression before new calculation : this test makes sure that after a calculation, if the user types a number again, the old calculation is cleared and only the new elements show.
+    // Clear expression before new calculation : this test makes sure that after a calculation, if the user types a number again, the old calculation is cleared and only the new element shows.
     func testGivenThereIsAResult_WhenAddingNewNumber_ThenCalculationExpressionIsCleared() {
         // Given :
         calculation.addNumbers(numbers: "5")
@@ -86,7 +86,20 @@ class CountOnMeTests: XCTestCase {
         XCTAssertEqual(calculation.calculationExpression, "12")
     }
     
-    // Testing that "canAddOperator" turns false, so that the "operandIsAlreadySet" error shows when typing "+" twice in a row
+    // Clear expression before new calculation : this test makes sure that after a calculation, if the user types a symbol again, the old calculation is cleared and only the new element shows.
+    func testGivenThereIsAResult_WhenAddingNewOperator_ThenCalculationExpressionIsCleared() {
+        // Given :
+        calculation.addNumbers(numbers: "5")
+        calculation.addOperator(symbol: "+")
+        calculation.addNumbers(numbers: "2")
+        calculation.equals()
+        // When :
+        calculation.addOperator(symbol: "+")
+        // Then :
+        XCTAssertEqual(calculation.calculationExpression, " + ")
+    }
+    
+    // Ensures that typing "+" twice in a row gets the user an error.
     func testGivenFirstElementIs4AndSecondElementIsPlus_WhenTypingPlusAgain_ThenCantAddExtraOperator() {
         // Given
         calculation.addNumbers(numbers: "4")
@@ -97,7 +110,7 @@ class CountOnMeTests: XCTestCase {
         XCTAssertEqual(calculation.calculationExpression, "= Erreur")
     }
     
-    // Testing that "haveEnoughElements" turns false, so that the "notEnoughElements" error shows when typing "=" before writing a complete formulation
+    // Ensures that an incomplete operation shows "= Erreur" on calculationExpression when "=" is typed.
     func testGivenThereIsNotEnoughElements_WhenTypingEqualButton_ThenHaveEnoughElementsIsFalse() {
         // Given
         calculation.addNumbers(numbers: "4")
@@ -108,7 +121,7 @@ class CountOnMeTests: XCTestCase {
         XCTAssertFalse(calculation.haveEnoughElements)
     }
     
-    // Testing that "expressionIsCorrect" turns false, so that the "expressionIsIncorrect" error shows when typing "=" without writing a valid operation
+    // Ensures that an incorrect operation shows "= Erreur" on calculationExpression when "=" is typed.
     func testGivenAnOpeartorIsTheLastElementTyped_WhenTypingEqualButton_ThenOperationIsCorrectIsFalse() {
         // Given
         calculation.addNumbers(numbers: "4")
@@ -121,6 +134,7 @@ class CountOnMeTests: XCTestCase {
         XCTAssertEqual(calculation.calculationExpression, "= Erreur")
     }
     
+    // Considering that a result is already displayed, if the user types the "=" symbol again, "= Erreur" shows on calculationExpression.
     func testGivenThereIsAResult_WhenTypingEqualAgain_ThenSwitchFallsIntoDefaultAndErrorShows() {
         // Given
         calculation.calculationExpression = "4 + 4 = 8.0"
@@ -130,6 +144,7 @@ class CountOnMeTests: XCTestCase {
         XCTAssertEqual(calculation.calculationExpression, "= Erreur")
     }
     
+    // Ensures that operations are calculated based on their mathematical priority order
     func testGivenCalculationHasPriorityOperators_WhenTypingEquals_ThenCalculationIsExecutedByPriorityOrder() {
         // Given
         calculation.addNumbers(numbers: "4")
@@ -145,7 +160,7 @@ class CountOnMeTests: XCTestCase {
         XCTAssertEqual(calculation.calculationResult, "8.0")
     }
     
-    // Faire test attester que la textView peut bien display des virgules
+    // Ensures that CountOnMe handles decimal numbers
     func testGivenOperationIsFiveDividedByTwo_WhenTypingEqual_ThenResultShownWillHaveDecimal() {
         // Given:
         calculation.addNumbers(numbers: "5")
@@ -157,12 +172,39 @@ class CountOnMeTests: XCTestCase {
         XCTAssertEqual(calculation.calculationResult, "2.5")
     }
     
+    // Ensures that an error shows when dividing by zero
     func testGivenOperationIsFourDividedByZero_WhenTypingEqual_ThenErrorNotApplicable() {
         // Given:
         calculation.calculationExpression = "5 ÷ 0"
         // When:
         calculation.equals()
         // Then:
-        XCTAssertEqual(calculation.calculationExpression, "= N/A")
+        XCTAssertEqual(calculation.calculationExpression, " = inf")
+    }
+    
+    // Ensures that operations starting with "-" are valid
+    func testGivenOperationStartsWithMinus_WhenTypingEqual_ThenMinusIsAssociatedToFirstNumber() {
+        // Given
+        calculation.addOperator(symbol: "-")
+        calculation.addNumbers(numbers: "3")
+        calculation.addOperator(symbol: "+")
+        calculation.addNumbers(numbers: "3")
+        // When
+        calculation.equals()
+        // Then
+        XCTAssertEqual(calculation.calculationResult, "0.0")
+    }
+    
+    // Ensures that operations starting with "+" are valid
+    func testGivenOperationStartsWithPlus_WhenTypingEqual_ThenPlusIsAssociatedToFirstNumber() {
+        // Given
+        calculation.addOperator(symbol: "+")
+        calculation.addNumbers(numbers: "3")
+        calculation.addOperator(symbol: "+")
+        calculation.addNumbers(numbers: "3")
+        // When
+        calculation.equals()
+        // Then
+        XCTAssertEqual(calculation.calculationResult, "6.0")
     }
 }

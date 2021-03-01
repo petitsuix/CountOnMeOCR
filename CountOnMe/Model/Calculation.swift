@@ -8,18 +8,11 @@
 
 import Foundation
 
-// MARK: - Protocols
-
-
 class Calculation {
-    
-    // MARK: - Instanciated Calculation and Error delegates
-    
     
     // MARK: - Instanciated textView
     var calculationExpression: String = "" {
         didSet {
-            //            calculationAndErrorDelegates?.calculationUpdated(calculationExpression)
             notifyCalculationUpdated()
         }
     }
@@ -72,6 +65,9 @@ class Calculation {
     }
     
     func addOperator(symbol: String) {
+        if expressionHasResult {
+            resetCalculationExpression()
+        }
         if canAddOperator {
             calculationExpression.append(" \(symbol) ")
         } else {
@@ -82,7 +78,7 @@ class Calculation {
     func verifyDivisionByZero(element: String) {
         if element == "0" {
             notifyErrorDivisionByZero()
-            calculationExpression = "= N/A"
+            calculationExpression = ""
             return
         }
     }
@@ -99,44 +95,46 @@ class Calculation {
         }
         var operationsToReduce = elements
         
-        if operationsToReduce[0] == "-" {
+        if operationsToReduce[0] == "-" || operationsToReduce[0] == "+" {
             operationsToReduce[0] = "\(operationsToReduce[0])\(operationsToReduce[1])"
             operationsToReduce.remove(at: 1)
         }
         
-        while operationsToReduce.count >= 3 {
-            while operationsToReduce.contains("×") || operationsToReduce.contains("÷") {
+        while operationsToReduce.contains("×") || operationsToReduce.contains("÷") {
+            
+            for element in operationsToReduce {
                 
-                for element in operationsToReduce {
+                switch element {
+                case "×" :
+                    let left = operationsToReduce[operationsToReduce.firstIndex(of: element)!-1]
+                    let right = operationsToReduce[operationsToReduce.firstIndex(of: element)!+1]
                     
-                    switch element {
-                    case "×" :
-                        let left = operationsToReduce[operationsToReduce.firstIndex(of: element)!-1]
-                        let right = operationsToReduce[operationsToReduce.firstIndex(of: element)!+1]
-                        
-                        calculationResult = "\(Double(left)! * Double(right)!)"
-                        
-                        operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!+1)
-                        operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!-1)
-                        operationsToReduce.insert(calculationResult, at: operationsToReduce.firstIndex(of: element)!)
-                        operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!)
-                    case "÷" :
-                        let left = operationsToReduce[operationsToReduce.firstIndex(of: element)!-1]
-                        let right = operationsToReduce[operationsToReduce.firstIndex(of: element)!+1]
-                        
-                        verifyDivisionByZero(element: right)
-                        
-                        calculationResult = "\(Double(left)! / Double(right)!)"
-                        
-                        operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!+1)
-                        operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!-1)
-                        operationsToReduce.insert(calculationResult, at:  operationsToReduce.firstIndex(of: element)!)
-                        operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!)
-                    default :
-                        break
-                    }
+                    calculationResult = "\(Double(left)! * Double(right)!)"
+                    
+                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!+1)
+                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!-1)
+                    operationsToReduce.insert(calculationResult, at: operationsToReduce.firstIndex(of: element)!)
+                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!)
+                case "÷" :
+                    let left = operationsToReduce[operationsToReduce.firstIndex(of: element)!-1]
+                    let right = operationsToReduce[operationsToReduce.firstIndex(of: element)!+1]
+                    
+                    verifyDivisionByZero(element: right)
+                    
+                    calculationResult = "\(Double(left)! / Double(right)!)"
+                    
+                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!+1)
+                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!-1)
+                    operationsToReduce.insert(calculationResult, at:  operationsToReduce.firstIndex(of: element)!)
+                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!)
+                default :
+                    break
                 }
             }
+        }
+        
+        while operationsToReduce.count >= 3 {
+            
             let left = Double(operationsToReduce[0])!
             let operand = operationsToReduce[1]
             let right = Double(operationsToReduce[2])!
