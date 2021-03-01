@@ -44,11 +44,7 @@ class Calculation {
     var expressionIsCorrect: Bool {
         return elements.last != "+" && elements.last != "-" && elements.last != "×" && elements.last != "÷"
     }
-    
-    var canAddOperator: Bool {
-        return elements.last != "+" && elements.last != "-" && elements.last != "×" && elements.last != "÷"
-    }
-    
+  
     var expressionHasResult: Bool {
         return calculationExpression.firstIndex(of: "=") != nil
     }
@@ -68,7 +64,7 @@ class Calculation {
         if expressionHasResult {
             resetCalculationExpression()
         }
-        if canAddOperator {
+        if expressionIsCorrect {
             calculationExpression.append(" \(symbol) ")
         } else {
             calculationExpression = "= Erreur"
@@ -95,7 +91,12 @@ class Calculation {
         }
         var operationsToReduce = elements
         
-        if operationsToReduce[0] == "-" || operationsToReduce[0] == "+" {
+        if operationsToReduce.first == "×" || operationsToReduce.first == "÷" {
+            calculationExpression = "= Erreur"
+            return
+        }
+
+        if operationsToReduce.first == "-" || operationsToReduce.first == "+" {
             operationsToReduce[0] = "\(operationsToReduce[0])\(operationsToReduce[1])"
             operationsToReduce.remove(at: 1)
         }

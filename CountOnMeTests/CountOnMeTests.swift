@@ -100,7 +100,7 @@ class CountOnMeTests: XCTestCase {
     }
     
     // Ensures that typing "+" twice in a row gets the user an error.
-    func testGivenFirstElementIs4AndSecondElementIsPlus_WhenTypingPlusAgain_ThenCantAddExtraOperator() {
+    func testGivenFirstElementIs4AndSecondElementIsPlus_WhenTypingPlusAgain_ThenErrorShows() {
         // Given
         calculation.addNumbers(numbers: "4")
         calculation.addOperator(symbol: "+")
@@ -122,12 +122,25 @@ class CountOnMeTests: XCTestCase {
     }
     
     // Ensures that an incorrect operation shows "= Erreur" on calculationExpression when "=" is typed.
-    func testGivenAnOpeartorIsTheLastElementTyped_WhenTypingEqualButton_ThenOperationIsCorrectIsFalse() {
+    func testGivenAnOpeartorIsTheLastElementTyped_WhenTypingEqualButton_ThenErrorShows() {
         // Given
         calculation.addNumbers(numbers: "4")
         calculation.addOperator(symbol: "+")
         calculation.addNumbers(numbers: "2")
         calculation.addOperator(symbol: "+")
+        // When
+        calculation.equals()
+        // Then :
+        XCTAssertEqual(calculation.calculationExpression, "= Erreur")
+    }
+    
+    // Ensures that an incorrect operation shows "= Erreur" on calculationExpression when "=" is typed.
+    func testGivenDivisionOperatorIsTheFirstElementTyped_WhenTypingEqualButton_ThenErrorShows() {
+        // Given
+        calculation.addOperator(symbol: "÷")
+        calculation.addNumbers(numbers: "4")
+        calculation.addOperator(symbol: "+")
+        calculation.addNumbers(numbers: "2")
         // When
         calculation.equals()
         // Then :
