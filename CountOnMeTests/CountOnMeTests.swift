@@ -33,7 +33,6 @@ class CountOnMeTests: XCTestCase {
         XCTAssertEqual(calculation.calculationResult, "7.0")
         XCTAssertTrue(calculation.expressionIsCorrect)
         XCTAssertTrue(calculation.haveEnoughElements)
-        XCTAssertTrue(calculation.canAddOperator)
         XCTAssertTrue(calculation.expressionHasResult)
     }
     
