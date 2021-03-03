@@ -44,7 +44,7 @@ class Calculation {
     var expressionIsCorrect: Bool {
         return elements.last != "+" && elements.last != "-" && elements.last != "×" && elements.last != "÷"
     }
-  
+    
     var expressionHasResult: Bool {
         return calculationExpression.firstIndex(of: "=") != nil
     }
@@ -74,70 +74,69 @@ class Calculation {
     func verifyDivisionByZero(element: String) {
         if element == "0" {
             notifyErrorDivisionByZero()
-            calculationExpression = ""
+            calculationExpression = "" // Ajjouter resetExpressionView
             return
         }
     }
     
+    func verifyCalculationIsValid() -> Bool {
+        guard haveEnoughElements, expressionIsCorrect else {
+            calculationExpression = "= Erreur"
+            return false
+        }
+        return true
+    }
+    
     func equals() { // resolve calculation
-        guard haveEnoughElements else {
-            calculationExpression = "= Erreur"
-            return
-        }
         
-        guard expressionIsCorrect else {
-            calculationExpression = "= Erreur"
-            return
-        }
+        guard verifyCalculationIsValid() else { return }
+        
         var operationsToReduce = elements
         
-        if operationsToReduce.first == "×" || operationsToReduce.first == "÷" {
+        if operationsToReduce.first == "×" || operationsToReduce.first == "÷" { // créer une variable calculée
             calculationExpression = "= Erreur"
             return
         }
-
+        
         if operationsToReduce.first == "-" || operationsToReduce.first == "+" {
             operationsToReduce[0] = "\(operationsToReduce[0])\(operationsToReduce[1])"
             operationsToReduce.remove(at: 1)
         }
         
+        
+        // FIXME : condenser tout ça en une méthode resolve qui return un string
         while operationsToReduce.contains("×") || operationsToReduce.contains("÷") {
             
             for element in operationsToReduce {
                 
-                switch element {
-                case "×" :
+                if element == "×" || element == "÷" {
                     let left = operationsToReduce[operationsToReduce.firstIndex(of: element)!-1]
                     let right = operationsToReduce[operationsToReduce.firstIndex(of: element)!+1]
                     
-                    calculationResult = "\(Double(left)! * Double(right)!)"
-                    
-                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!+1)
-                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!-1)
-                    operationsToReduce.insert(calculationResult, at: operationsToReduce.firstIndex(of: element)!)
-                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!)
-                case "÷" :
-                    let left = operationsToReduce[operationsToReduce.firstIndex(of: element)!-1]
-                    let right = operationsToReduce[operationsToReduce.firstIndex(of: element)!+1]
-                    
-                    verifyDivisionByZero(element: right)
-                    
-                    calculationResult = "\(Double(left)! / Double(right)!)"
-                    
-                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!+1)
+                    switch element {
+                    case "×" :
+                        calculationResult = "\(Double(left)! * Double(right)!)"
+                    case "÷" :
+                        verifyDivisionByZero(element: right)
+                        calculationResult = "\(Double(left)! / Double(right)!)"
+                    default :
+                        break
+                    }
+                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!+1) // @ operandIndex
                     operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!-1)
                     operationsToReduce.insert(calculationResult, at:  operationsToReduce.firstIndex(of: element)!)
                     operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!)
-                default :
-                    break
                 }
             }
         }
         
         while operationsToReduce.count >= 3 {
             
-            let left = Double(operationsToReduce[0])!
-            let operand = operationsToReduce[1]
+            guard let left = Double(operationsToReduce[0]) else { // a retravailler
+                calculationExpression = "= Erreur"
+                return
+            }
+            let operand = operationsToReduce[1] // trouver la possibilité de changer l'index 1 et de le baser sur l'operand en question, si pas de signe divisé ou multiplié, le laisser à 1
             let right = Double(operationsToReduce[2])!
             
             switch operand {
@@ -150,6 +149,6 @@ class Calculation {
             operationsToReduce = Array(operationsToReduce.dropFirst(3))
             operationsToReduce.insert("\(calculationResult)", at: 0)
         }
-        calculationExpression.append(" = \(operationsToReduce.first!)")
+        calculationExpression.append(" = \(operationsToReduce.first!)") // Checker String Format pour arrondir les nombres entiers
     }
 }
