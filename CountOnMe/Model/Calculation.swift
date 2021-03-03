@@ -138,13 +138,15 @@ class Calculation {
         
         while operationsToReduce.count >= 3 {
             
-            guard let left = Double(operationsToReduce[0]) else { // a retravailler
+            guard let left = Double(operationsToReduce[0]) else {
                 calculationExpression = "= Erreur"
                 return
             }
             let operand = operationsToReduce[1] // trouver la possibilité de changer l'index 1 et de le baser sur l'operand en question, si pas de signe divisé ou multiplié, le laisser à 1
-            let right = Double(operationsToReduce[2])!
-            
+            guard let right = Double(operationsToReduce[2]) else {
+                calculationExpression = "= Erreur"
+                return
+            }
             switch operand {
             case "+": calculationResult = "\(left + right)"
             case "-": calculationResult = "\(left - right)"
