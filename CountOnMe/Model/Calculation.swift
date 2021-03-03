@@ -41,10 +41,14 @@ class Calculation {
         return elements.count >= 3
     }
     
-    var expressionIsCorrect: Bool {
-        return elements.last != "+" && elements.last != "-" && elements.last != "×" && elements.last != "÷"
+    var expressionStartsWithValidElement: Bool {
+        return elements.first != "×" && elements.first != "÷"
     }
     
+    var expressionEndsWithValidElement: Bool {
+        return elements.last != "+" && elements.last != "-" && elements.last != "×" && elements.last != "÷"
+    }
+
     var expressionHasResult: Bool {
         return calculationExpression.firstIndex(of: "=") != nil
     }
@@ -64,7 +68,7 @@ class Calculation {
         if expressionHasResult {
             resetCalculationExpression()
         }
-        if expressionIsCorrect {
+        if expressionEndsWithValidElement {
             calculationExpression.append(" \(symbol) ")
         } else {
             calculationExpression = "= Erreur"
@@ -80,8 +84,16 @@ class Calculation {
     }
     
     func verifyCalculationIsValid() -> Bool {
-        guard haveEnoughElements, expressionIsCorrect else {
-            calculationExpression = "= Erreur"
+        guard haveEnoughElements else {
+            calculationExpression = "= missing elem."
+            return false
+        }
+        guard expressionEndsWithValidElement else {
+            calculationExpression = "= incorrect last elem."
+            return false
+        }
+        guard expressionStartsWithValidElement else {
+            calculationExpression = "= incorrect first elem."
             return false
         }
         return true
@@ -93,16 +105,10 @@ class Calculation {
         
         var operationsToReduce = elements
         
-        if operationsToReduce.first == "×" || operationsToReduce.first == "÷" { // créer une variable calculée
-            calculationExpression = "= Erreur"
-            return
-        }
-        
         if operationsToReduce.first == "-" || operationsToReduce.first == "+" {
             operationsToReduce[0] = "\(operationsToReduce[0])\(operationsToReduce[1])"
             operationsToReduce.remove(at: 1)
         }
-        
         
         // FIXME : condenser tout ça en une méthode resolve qui return un string
         while operationsToReduce.contains("×") || operationsToReduce.contains("÷") {
