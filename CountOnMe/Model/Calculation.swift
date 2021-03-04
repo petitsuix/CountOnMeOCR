@@ -48,7 +48,7 @@ class Calculation {
     var expressionEndsWithValidElement: Bool {
         return elements.last != "+" && elements.last != "-" && elements.last != "×" && elements.last != "÷"
     }
-
+    
     var expressionHasResult: Bool {
         return calculationExpression.firstIndex(of: "=") != nil
     }
@@ -78,7 +78,7 @@ class Calculation {
     func verifyDivisionByZero(element: String) {
         if element == "0" {
             notifyErrorDivisionByZero()
-            calculationExpression = "" // Ajjouter resetExpressionView
+            resetCalculationExpression()
             return
         }
     }
@@ -100,63 +100,49 @@ class Calculation {
     }
     
     func equals() { // resolve calculation
-        
         guard verifyCalculationIsValid() else { return }
-        
+        resolve()
+    }
+    
+    func resolve() -> String {
         var operationsToReduce = elements
         
         if operationsToReduce.first == "-" || operationsToReduce.first == "+" {
             operationsToReduce[0] = "\(operationsToReduce[0])\(operationsToReduce[1])"
             operationsToReduce.remove(at: 1)
         }
-        
-        // FIXME : condenser tout ça en une méthode resolve qui return un string
-        while operationsToReduce.contains("×") || operationsToReduce.contains("÷") {
+        while operationsToReduce.count >= 3 {
+            var operandIndex = Int()
             
-            for element in operationsToReduce {
-                
-                if element == "×" || element == "÷" {
-                    let left = operationsToReduce[operationsToReduce.firstIndex(of: element)!-1]
-                    let right = operationsToReduce[operationsToReduce.firstIndex(of: element)!+1]
-                    
-                    switch element {
-                    case "×" :
-                        calculationResult = "\(Double(left)! * Double(right)!)"
-                    case "÷" :
-                        verifyDivisionByZero(element: right)
-                        calculationResult = "\(Double(left)! / Double(right)!)"
-                    default :
-                        break
-                    }
-                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!+1) // @ operandIndex
-                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!-1)
-                    operationsToReduce.insert(calculationResult, at:  operationsToReduce.firstIndex(of: element)!)
-                    operationsToReduce.remove(at: operationsToReduce.firstIndex(of: element)!)
+            if operationsToReduce.contains("×") || operationsToReduce.contains("÷") {
+                if operationsToReduce.firstIndex(where: { $0.contains("×") || $0.contains("÷")}) != nil {
+                    operandIndex = operationsToReduce.firstIndex(where: { $0.contains("×") || $0.contains("÷")})!
+                }
+            } else {
+                if operationsToReduce.firstIndex(where: { $0.contains("+") || $0.contains("-")}) != nil {
+                    operandIndex = operationsToReduce.firstIndex(where: { $0.contains("+") || $0.contains("-")})!
                 }
             }
-        }
-        
-        while operationsToReduce.count >= 3 {
+            guard let left = Double(operationsToReduce[operandIndex-1]) else { calculationExpression = "= left is out of range"; return "out of range" }
+            let operand = operationsToReduce[operandIndex]
+            guard let right = Double(operationsToReduce[operandIndex+1]) else { calculationExpression = "= right is out of range"; return "out of range" }
             
-            guard let left = Double(operationsToReduce[0]) else {
-                calculationExpression = "= Erreur"
-                return
-            }
-            let operand = operationsToReduce[1] // trouver la possibilité de changer l'index 1 et de le baser sur l'operand en question, si pas de signe divisé ou multiplié, le laisser à 1
-            guard let right = Double(operationsToReduce[2]) else {
-                calculationExpression = "= Erreur"
-                return
-            }
             switch operand {
             case "+": calculationResult = "\(left + right)"
             case "-": calculationResult = "\(left - right)"
-            default:
-                calculationExpression = "= Erreur"
-                return
+            case "×": calculationResult = "\(left * right)"
+            case "÷": verifyDivisionByZero(element: "\(right)"); calculationResult = "\(left / right)"
+            default: calculationExpression = "= wrong operand"; return "wrong operand"
             }
-            operationsToReduce = Array(operationsToReduce.dropFirst(3))
-            operationsToReduce.insert("\(calculationResult)", at: 0)
+            operationsToReduce.remove(at: operandIndex+1) // @ operandIndex
+            operationsToReduce.remove(at: operandIndex-1)
+            operationsToReduce.insert(calculationResult, at: operandIndex)
+            operationsToReduce.remove(at: operandIndex-1)
+            
         }
-        calculationExpression.append(" = \(operationsToReduce.first!)") // Checker String Format pour arrondir les nombres entiers
+        if operationsToReduce.first != nil {
+            calculationExpression.append(" = \(calculationResult)") // Checker String Format pour arrondir les nombres entiers
+        }
+        return calculationResult
     }
 }
