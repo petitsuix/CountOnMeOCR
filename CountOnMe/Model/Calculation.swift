@@ -119,8 +119,8 @@ class Calculation {
                     operandIndex = operationsToReduce.firstIndex(where: { $0.contains("×") || $0.contains("÷")})!
                 }
             } else {
-                if operationsToReduce.firstIndex(where: { $0.contains("+") || $0.contains("-")}) != nil {
-                    operandIndex = operationsToReduce.firstIndex(where: { $0.contains("+") || $0.contains("-")})!
+                if operationsToReduce.firstIndex(where: { $0 == "+" || $0 == "-" }) != nil {
+                    operandIndex = operationsToReduce.firstIndex(where: { $0 == "+" || $0 == "-"})!
                 }
             }
             guard let left = Double(operationsToReduce[operandIndex-1]) else { calculationExpression = "= left is out of range"; return "out of range" }
