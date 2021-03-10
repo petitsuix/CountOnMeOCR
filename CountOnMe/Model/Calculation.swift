@@ -53,6 +53,10 @@ class Calculation {
         return calculationExpression.firstIndex(of: "=") != nil
     }
     
+    var expressionIsNotDividedByZero: Bool {
+        return true
+    }
+    
     func resetCalculationExpression() {
         calculationExpression = ""
     }
@@ -71,19 +75,22 @@ class Calculation {
         if expressionEndsWithValidElement {
             calculationExpression.append(" \(symbol) ")
         } else {
-            calculationExpression = "= Erreur"
+            calculationExpression = "= invalid op." // invalid operation (ex : 2 + + 4)
         }
     }
     
-    func verifyDivisionByZero(element: String) {
-        if element == "0" {
-            notifyErrorDivisionByZero()
-            resetCalculationExpression()
-            return
+    func dividerIsNotZero(element: String) -> Bool {
+        if element == "0.0" {
+            return false
         }
+        return true
     }
     
     func verifyCalculationIsValid() -> Bool {
+        if expressionHasResult {
+            calculationExpression = "= \(calculationResult)"
+            return false
+        }
         guard haveEnoughElements else {
             calculationExpression = "= missing elem."
             return false
@@ -100,49 +107,48 @@ class Calculation {
     }
     
     func equals() { // resolve calculation
+        guard expressionIsNotDividedByZero else { notifyErrorDivisionByZero(); return }
         guard verifyCalculationIsValid() else { return }
-        resolve()
+        calculationExpression.append(" = \(resolve())")
     }
     
     func resolve() -> String {
         var operationsToReduce = elements
-        
         if operationsToReduce.first == "-" || operationsToReduce.first == "+" {
             operationsToReduce[0] = "\(operationsToReduce[0])\(operationsToReduce[1])"
             operationsToReduce.remove(at: 1)
         }
         while operationsToReduce.count >= 3 {
-            var operandIndex = Int()
-            
-            if operationsToReduce.contains("×") || operationsToReduce.contains("÷") {
-                if operationsToReduce.firstIndex(where: { $0.contains("×") || $0.contains("÷")}) != nil {
-                    operandIndex = operationsToReduce.firstIndex(where: { $0.contains("×") || $0.contains("÷")})!
-                }
-            } else {
-                if operationsToReduce.firstIndex(where: { $0 == "+" || $0 == "-" }) != nil {
-                    operandIndex = operationsToReduce.firstIndex(where: { $0 == "+" || $0 == "-"})!
-                }
+            var operandIndex = 1
+            // s'en débarasser
+                if let index = operationsToReduce.firstIndex(where: { $0.contains("×") || $0.contains("÷")}) {
+                    operandIndex = index
             }
-            guard let left = Double(operationsToReduce[operandIndex-1]) else { calculationExpression = "= left is out of range"; return "out of range" }
+            guard let left = Double(operationsToReduce[operandIndex-1]), let right = Double(operationsToReduce[operandIndex+1]) else { return "= out of range" }
             let operand = operationsToReduce[operandIndex]
-            guard let right = Double(operationsToReduce[operandIndex+1]) else { calculationExpression = "= right is out of range"; return "out of range" }
             
             switch operand {
             case "+": calculationResult = "\(left + right)"
             case "-": calculationResult = "\(left - right)"
             case "×": calculationResult = "\(left * right)"
-            case "÷": verifyDivisionByZero(element: "\(right)"); calculationResult = "\(left / right)"
-            default: calculationExpression = "= wrong operand"; return "wrong operand"
+            case "÷":
+                if dividerIsNotZero(element: "\(right)") {
+                    calculationResult = "\(left / right)"
+                } else {
+                    notifyErrorDivisionByZero()
+                    resetCalculationExpression()
+                    return "div. by zero"
+                }
+            default: return "wrong operand"
             }
-            operationsToReduce.remove(at: operandIndex+1) // @ operandIndex
+            operationsToReduce.remove(at: operandIndex+1)
             operationsToReduce.remove(at: operandIndex-1)
-            operationsToReduce.insert(calculationResult, at: operandIndex)
+            operationsToReduce.insert(calculationResult, at: operandIndex) // faire la conversion  pour enlever les décimales avant d'insert le result
             operationsToReduce.remove(at: operandIndex-1)
-            
         }
-        if operationsToReduce.first != nil {
-            calculationExpression.append(" = \(calculationResult)") // Checker String Format pour arrondir les nombres entiers
-        }
+//        if operationsToReduce.first != nil {
+//            calculationExpression.append(" = \(calculationResult)") // Checker String Format pour arrondir les nombres entiers : String(format: "%.2f", result)
+//        }
         return calculationResult
     }
 }

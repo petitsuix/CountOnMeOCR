@@ -110,14 +110,14 @@ class CountOnMeTests: XCTestCase {
     }
     
     // Ensures that an incomplete operation shows "= Erreur" on calculationExpression when "=" is typed.
-    func testGivenThereIsNotEnoughElements_WhenTypingEqualButton_ThenHaveEnoughElementsIsFalse() {
+    func testGivenThereIsNotEnoughElements_WhenTypingEqualButton_ThenExpressionShowsError() {
         // Given
         calculation.addNumbers(numbers: "4")
         calculation.addOperator(symbol: "+")
         // When
         calculation.equals()
         // Then :
-        XCTAssertFalse(calculation.haveEnoughElements)
+        XCTAssertEqual(calculation.calculationExpression, "= missing elem.")
     }
     
     // Ensures that an incorrect operation shows "= Erreur" on calculationExpression when "=" is typed.
@@ -130,7 +130,7 @@ class CountOnMeTests: XCTestCase {
         // When
         calculation.equals()
         // Then :
-        XCTAssertEqual(calculation.calculationExpression, "= Erreur")
+        XCTAssertEqual(calculation.calculationExpression, "= incorrect last elem.")
     }
     
     // Ensures that an incorrect operation shows "= Erreur" on calculationExpression when "=" is typed.
@@ -143,17 +143,20 @@ class CountOnMeTests: XCTestCase {
         // When
         calculation.equals()
         // Then :
-        XCTAssertEqual(calculation.calculationExpression, "= Erreur")
+        XCTAssertEqual(calculation.calculationExpression, "= incorrect first elem.")
     }
     
-    // Considering that a result is already displayed, if the user types the "=" symbol again, "= Erreur" shows on calculationExpression.
-    func testGivenThereIsAResult_WhenTypingEqualAgain_ThenSwitchFallsIntoDefaultAndErrorShows() {
+    // Considering that a result is already displayed, if the user types the "=" symbol again, final result remains on calculationExpression.
+    func testGivenThereIsAResult_WhenTypingEqualAgain_ThenFinalResultStays() {
         // Given
-        calculation.calculationExpression = "4 + 4 = 8.0"
+        calculation.addNumbers(numbers: "5")
+        calculation.addOperator(symbol: "+")
+        calculation.addNumbers(numbers: "2")
+        calculation.equals()
         // When
         calculation.equals()
         // Then
-        XCTAssertEqual(calculation.calculationExpression, "= Erreur")
+        XCTAssertEqual(calculation.calculationExpression, "= 7.0")
     }
     
     // Ensures that operations are calculated based on their mathematical priority order
@@ -191,7 +194,7 @@ class CountOnMeTests: XCTestCase {
         // When:
         calculation.equals()
         // Then:
-        XCTAssertEqual(calculation.calculationExpression, " = inf")
+        XCTAssertEqual(calculation.calculationExpression, " = div. by zero")
     }
     
     // Ensures that operations starting with "-" are valid

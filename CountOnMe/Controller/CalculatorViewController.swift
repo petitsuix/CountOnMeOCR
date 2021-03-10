@@ -27,7 +27,6 @@ class CalculatorViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-//        calculation.calculationAndErrorDelegates = self
         let notificationName = NSNotification.Name(rawValue: "calculation updated")
         NotificationCenter.default.addObserver(self, selector: #selector(calculationUpdated), name: notificationName, object: nil)
         
