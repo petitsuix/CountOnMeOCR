@@ -54,6 +54,10 @@ class Calculation {
     }
     
     var expressionIsNotDividedByZero: Bool {
+        if calculationExpression.contains("÷ 0") {
+            calculationExpression = "= div. by zero"
+            return false
+        }
         return true
     }
     
@@ -131,14 +135,7 @@ class Calculation {
             case "+": calculationResult = "\(left + right)"
             case "-": calculationResult = "\(left - right)"
             case "×": calculationResult = "\(left * right)"
-            case "÷":
-                if dividerIsNotZero(element: "\(right)") {
-                    calculationResult = "\(left / right)"
-                } else {
-                    notifyErrorDivisionByZero()
-                    resetCalculationExpression()
-                    return "div. by zero"
-                }
+            case "÷": calculationResult = "\(left / right)"
             default: return "wrong operand"
             }
             operationsToReduce.remove(at: operandIndex+1)
