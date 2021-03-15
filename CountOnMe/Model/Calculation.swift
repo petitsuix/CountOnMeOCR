@@ -34,7 +34,7 @@ class Calculation {
             return "\(operand)"
         } //.map { "\($0)" }
     }
-    
+
     var calculationResult: String = ""
     
     var haveEnoughElements: Bool {
@@ -83,16 +83,18 @@ class Calculation {
         }
     }
     
-    func dividerIsNotZero(element: String) -> Bool {
-        if element == "0.0" {
-            return false
+    func cleanResult() {
+        if let cleanedResult = (Double("\(resolve())")?.cleanCalculations()) {
+            calculationExpression.append(" = \(cleanedResult)")
         }
-        return true
     }
     
     func verifyCalculationIsValid() -> Bool {
         if expressionHasResult {
-            calculationExpression = "= \(calculationResult)"
+            if let cleanedResult = (Double("\(calculationResult)")?.cleanCalculations()) {
+                resetCalculationExpression()
+                calculationExpression.append(" = \(cleanedResult)")
+            }
             return false
         }
         guard haveEnoughElements else {
@@ -113,7 +115,7 @@ class Calculation {
     func equals() { // resolve calculation
         guard expressionIsNotDividedByZero else { notifyErrorDivisionByZero(); return }
         guard verifyCalculationIsValid() else { return }
-        calculationExpression.append(" = \(resolve())")
+        cleanResult()
     }
     
     func resolve() -> String {
@@ -124,13 +126,11 @@ class Calculation {
         }
         while operationsToReduce.count >= 3 {
             var operandIndex = 1
-            // s'en débarasser
                 if let index = operationsToReduce.firstIndex(where: { $0.contains("×") || $0.contains("÷")}) {
                     operandIndex = index
             }
             guard let left = Double(operationsToReduce[operandIndex-1]), let right = Double(operationsToReduce[operandIndex+1]) else { return "= out of range" }
             let operand = operationsToReduce[operandIndex]
-            
             switch operand {
             case "+": calculationResult = "\(left + right)"
             case "-": calculationResult = "\(left - right)"
@@ -140,12 +140,19 @@ class Calculation {
             }
             operationsToReduce.remove(at: operandIndex+1)
             operationsToReduce.remove(at: operandIndex-1)
-            operationsToReduce.insert(calculationResult, at: operandIndex) // faire la conversion  pour enlever les décimales avant d'insert le result
+            operationsToReduce.insert(calculationResult, at: operandIndex)
             operationsToReduce.remove(at: operandIndex-1)
         }
-//        if operationsToReduce.first != nil {
-//            calculationExpression.append(" = \(calculationResult)") // Checker String Format pour arrondir les nombres entiers : String(format: "%.2f", result)
-//        }
         return calculationResult
+    }
+}
+
+extension Double {
+    func cleanCalculations() -> String {
+        let formatter = NumberFormatter()
+        let number = NSNumber(value: self)
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 4
+        return String(formatter.string(from: number) ?? "= wrong format")
     }
 }
