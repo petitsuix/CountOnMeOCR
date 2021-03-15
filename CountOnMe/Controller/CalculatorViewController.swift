@@ -9,10 +9,15 @@
 import UIKit
 
 class CalculatorViewController: UIViewController {
+    
+    // MARK: - Properties
+    
     @IBOutlet weak var textView: UITextView!
 
     var calculation = Calculation()
 
+    // MARK: - Methods
+    
     @objc func calculationUpdated() {
         textView.text = calculation.calculationExpression
     }
@@ -23,7 +28,7 @@ class CalculatorViewController: UIViewController {
             self.present(alertVC, animated: true, completion: nil)
     }
     
-    // View Life cycles
+    // MARK: - View Life cycles methods
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
@@ -34,22 +39,23 @@ class CalculatorViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(errorDivisionByZero), name: notificationErrorName, object: nil)
     }
     
-    @IBAction func tappedEqualButton() {
-        calculation.equals()
-    }
+    // MARK: - Actions
     
     @IBAction func tappedACButton() {
         calculation.resetCalculationExpression()
     }
     
-    // View actions
     @IBAction func tappedNumberButton(_ sender: UIButton) {
         guard let numberText = sender.title(for: .normal) else { return }
         calculation.addNumbers(numbers: numberText)
     }
     
-    @IBAction func didTapOperatorButton(_ sender: UIButton) {
+    @IBAction func tappedOperatorButton(_ sender: UIButton) {
         guard let operatorSymbol = sender.title(for: .normal) else { return }
         calculation.addOperator(symbol: operatorSymbol)
+    }
+    
+    @IBAction func tappedEqualButton() {
+        calculation.equals()
     }
 }

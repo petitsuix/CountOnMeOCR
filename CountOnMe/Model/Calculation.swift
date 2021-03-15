@@ -11,24 +11,30 @@ import Foundation
 class Calculation {
     
     // MARK: - Instanciated textView
+    
     var calculationExpression: String = "" {
         didSet {
             notifyCalculationUpdated()
         }
     }
     
+    // Posting calculation error notification to the Calculator View Controller observer
     private func notifyErrorDivisionByZero() {
         let notificationName = NSNotification.Name(rawValue: "calculation error")
         let notification = Notification(name: notificationName)
         NotificationCenter.default.post(notification)
     }
     
+    // Posting calculation updated notification to the Calculator View Controller observer
     private func notifyCalculationUpdated() {
         let notificationName = NSNotification.Name(rawValue: "calculation updated")
         let notification = Notification(name: notificationName)
         NotificationCenter.default.post(notification)
     }
+    
     // MARK: - Properties
+    
+    // Splitting and instanciating textView
     var elements: [String] {
         return calculationExpression.split(separator: " ").map { (operand) -> String in
             return "\(operand)"
@@ -49,7 +55,7 @@ class Calculation {
         return elements.last != "+" && elements.last != "-" && elements.last != "×" && elements.last != "÷"
     }
     
-    var expressionHasResult: Bool {
+    var expressionAlreadyHasAResult: Bool {
         return calculationExpression.firstIndex(of: "=") != nil
     }
     
@@ -66,15 +72,15 @@ class Calculation {
     }
     
     func addNumbers(numbers: String) {
-        if expressionHasResult {
-            resetCalculationExpression()
+        if expressionAlreadyHasAResult {
+            resetCalculationExpression() // If a result is already there, then typing a new number cleans the calculation expression
         }
         calculationExpression.append(numbers)
     }
     
     func addOperator(symbol: String) {
-        if expressionHasResult {
-            resetCalculationExpression()
+        if expressionAlreadyHasAResult {
+            resetCalculationExpression() // If a result is already there, then typing a new symbol cleans the calculation expression
         }
         if expressionEndsWithValidElement {
             calculationExpression.append(" \(symbol) ")
@@ -83,14 +89,45 @@ class Calculation {
         }
     }
     
+    // Core calculation method with priorization of elements
+    func resolve() -> String {
+        var operationsToReduce = elements
+        if operationsToReduce.first == "-" || operationsToReduce.first == "+" { // If calculation's 1st element is "+" or "-", group it with the following element
+            operationsToReduce[0] = "\(operationsToReduce[0])\(operationsToReduce[1])"
+            operationsToReduce.remove(at: 1)
+        }
+        while operationsToReduce.count >= 3 {
+            var operandIndex = 1 // operand's index is always 1 (ex : 6 + 2)...
+                if let index = operationsToReduce.firstIndex(where: { $0.contains("×") || $0.contains("÷")}) { // ... unless the calculation contains priority operands. If so, the index value is set accordingly to the operand's place.
+                    operandIndex = index
+            }
+            guard let left = Double(operationsToReduce[operandIndex-1]), let right = Double(operationsToReduce[operandIndex+1]) else { return "= out of range" } // Based on the previously designated operandIndex, giving corresponding values to "left" & "right" elements
+            let operand = operationsToReduce[operandIndex]
+            switch operand {
+            case "+": calculationResult = "\(left + right)"
+            case "-": calculationResult = "\(left - right)"
+            case "×": calculationResult = "\(left * right)"
+            case "÷": calculationResult = "\(left / right)"
+            default: return "wrong operand"
+            }
+            operationsToReduce.remove(at: operandIndex+1) // Remove elements that were calculated, replace them with the result
+            operationsToReduce.remove(at: operandIndex-1)
+            operationsToReduce.insert(calculationResult, at: operandIndex)
+            operationsToReduce.remove(at: operandIndex-1)
+        }
+        return calculationResult
+    }
+    
+    // Takes the unnecessary decimals out to show a "cleaned result"
     func cleanResult() {
         if let cleanedResult = (Double("\(resolve())")?.cleanCalculations()) {
             calculationExpression.append(" = \(cleanedResult)")
         }
     }
     
+    // This method goes through typical error properties to ensure that the calculation is valid before resolving it
     func verifyCalculationIsValid() -> Bool {
-        if expressionHasResult {
+        if expressionAlreadyHasAResult {
             if let cleanedResult = (Double("\(calculationResult)")?.cleanCalculations()) {
                 resetCalculationExpression()
                 calculationExpression.append(" = \(cleanedResult)")
@@ -112,41 +149,15 @@ class Calculation {
         return true
     }
     
-    func equals() { // resolve calculation
+    // Called in view controller. Handles calculation from A to Z, including verification of potential errors and cleaning of decimals.
+    func equals() {
         guard expressionIsNotDividedByZero else { notifyErrorDivisionByZero(); return }
         guard verifyCalculationIsValid() else { return }
         cleanResult()
     }
-    
-    func resolve() -> String {
-        var operationsToReduce = elements
-        if operationsToReduce.first == "-" || operationsToReduce.first == "+" {
-            operationsToReduce[0] = "\(operationsToReduce[0])\(operationsToReduce[1])"
-            operationsToReduce.remove(at: 1)
-        }
-        while operationsToReduce.count >= 3 {
-            var operandIndex = 1
-                if let index = operationsToReduce.firstIndex(where: { $0.contains("×") || $0.contains("÷")}) {
-                    operandIndex = index
-            }
-            guard let left = Double(operationsToReduce[operandIndex-1]), let right = Double(operationsToReduce[operandIndex+1]) else { return "= out of range" }
-            let operand = operationsToReduce[operandIndex]
-            switch operand {
-            case "+": calculationResult = "\(left + right)"
-            case "-": calculationResult = "\(left - right)"
-            case "×": calculationResult = "\(left * right)"
-            case "÷": calculationResult = "\(left / right)"
-            default: return "wrong operand"
-            }
-            operationsToReduce.remove(at: operandIndex+1)
-            operationsToReduce.remove(at: operandIndex-1)
-            operationsToReduce.insert(calculationResult, at: operandIndex)
-            operationsToReduce.remove(at: operandIndex-1)
-        }
-        return calculationResult
-    }
 }
 
+// Allows to format the result
 extension Double {
     func cleanCalculations() -> String {
         let formatter = NumberFormatter()
