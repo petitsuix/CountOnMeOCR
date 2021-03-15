@@ -12,11 +12,20 @@
 		1FA43BD8224E569900F565CB /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FA43BD6224E569900F565CB /* Main.storyboard */; };
 		1FA43BDA224E569A00F565CB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1FA43BD9224E569A00F565CB /* Assets.xcassets */; };
 		1FA43BDD224E569A00F565CB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1FA43BDB224E569A00F565CB /* LaunchScreen.storyboard */; };
+		973918B125FF7B8000D10EE3 /* CountOnMeUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 973918B025FF7B8000D10EE3 /* CountOnMeUITests.swift */; };
+		973918C925FF870000D10EE3 /* CountOnMeExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 973918C825FF870000D10EE3 /* CountOnMeExtensions.swift */; };
 		979BE31425D3F31C0055999A /* Calculation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979BE31325D3F31C0055999A /* Calculation.swift */; };
 		979BE34825D40C620055999A /* CountOnMeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 979BE34725D40C620055999A /* CountOnMeTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		973918B325FF7B8000D10EE3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 1FA43BC7224E569900F565CB /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 1FA43BCE224E569900F565CB;
+			remoteInfo = CountOnMe;
+		};
 		979BE34A25D40C620055999A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 1FA43BC7224E569900F565CB /* Project object */;
@@ -34,6 +43,10 @@
 		1FA43BD9224E569A00F565CB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1FA43BDC224E569A00F565CB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1FA43BDE224E569A00F565CB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		973918AE25FF7B8000D10EE3 /* CountOnMeUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CountOnMeUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		973918B025FF7B8000D10EE3 /* CountOnMeUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountOnMeUITests.swift; sourceTree = "<group>"; };
+		973918B225FF7B8000D10EE3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		973918C825FF870000D10EE3 /* CountOnMeExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountOnMeExtensions.swift; sourceTree = "<group>"; };
 		979BE31325D3F31C0055999A /* Calculation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Calculation.swift; sourceTree = "<group>"; };
 		979BE34525D40C620055999A /* CountOnMeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CountOnMeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		979BE34725D40C620055999A /* CountOnMeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CountOnMeTests.swift; sourceTree = "<group>"; };
@@ -42,6 +55,13 @@
 
 /* Begin PBXFrameworksBuildPhase section */
 		1FA43BCC224E569900F565CB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		973918AB25FF7B8000D10EE3 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -63,6 +83,7 @@
 			children = (
 				1FA43BD1224E569900F565CB /* CountOnMe */,
 				979BE34625D40C620055999A /* CountOnMeTests */,
+				973918AF25FF7B8000D10EE3 /* CountOnMeUITests */,
 				1FA43BD0224E569900F565CB /* Products */,
 			);
 			sourceTree = "<group>";
@@ -72,6 +93,7 @@
 			children = (
 				1FA43BCF224E569900F565CB /* CountOnMe.app */,
 				979BE34525D40C620055999A /* CountOnMeTests.xctest */,
+				973918AE25FF7B8000D10EE3 /* CountOnMeUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -82,9 +104,27 @@
 				979BE30925D3F1350055999A /* Model */,
 				979BE30A25D3F13B0055999A /* View */,
 				979BE30B25D3F1440055999A /* Controller */,
+				973918C725FF86D500D10EE3 /* Extensions */,
 				979BE30C25D3F18D0055999A /* Supporting Files */,
 			);
 			path = CountOnMe;
+			sourceTree = "<group>";
+		};
+		973918AF25FF7B8000D10EE3 /* CountOnMeUITests */ = {
+			isa = PBXGroup;
+			children = (
+				973918B025FF7B8000D10EE3 /* CountOnMeUITests.swift */,
+				973918B225FF7B8000D10EE3 /* Info.plist */,
+			);
+			path = CountOnMeUITests;
+			sourceTree = "<group>";
+		};
+		973918C725FF86D500D10EE3 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				973918C825FF870000D10EE3 /* CountOnMeExtensions.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 		979BE30925D3F1350055999A /* Model */ = {
@@ -151,6 +191,24 @@
 			productReference = 1FA43BCF224E569900F565CB /* CountOnMe.app */;
 			productType = "com.apple.product-type.application";
 		};
+		973918AD25FF7B8000D10EE3 /* CountOnMeUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 973918B725FF7B8000D10EE3 /* Build configuration list for PBXNativeTarget "CountOnMeUITests" */;
+			buildPhases = (
+				973918AA25FF7B8000D10EE3 /* Sources */,
+				973918AB25FF7B8000D10EE3 /* Frameworks */,
+				973918AC25FF7B8000D10EE3 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				973918B425FF7B8000D10EE3 /* PBXTargetDependency */,
+			);
+			name = CountOnMeUITests;
+			productName = CountOnMeUITests;
+			productReference = 973918AE25FF7B8000D10EE3 /* CountOnMeUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		979BE34425D40C620055999A /* CountOnMeTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 979BE34C25D40C620055999A /* Build configuration list for PBXNativeTarget "CountOnMeTests" */;
@@ -182,6 +240,10 @@
 					1FA43BCE224E569900F565CB = {
 						CreatedOnToolsVersion = 10.2;
 					};
+					973918AD25FF7B8000D10EE3 = {
+						CreatedOnToolsVersion = 12.4;
+						TestTargetID = 1FA43BCE224E569900F565CB;
+					};
 					979BE34425D40C620055999A = {
 						CreatedOnToolsVersion = 12.4;
 						TestTargetID = 1FA43BCE224E569900F565CB;
@@ -203,6 +265,7 @@
 			targets = (
 				1FA43BCE224E569900F565CB /* CountOnMe */,
 				979BE34425D40C620055999A /* CountOnMeTests */,
+				973918AD25FF7B8000D10EE3 /* CountOnMeUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -215,6 +278,13 @@
 				1FA43BDD224E569A00F565CB /* LaunchScreen.storyboard in Resources */,
 				1FA43BDA224E569A00F565CB /* Assets.xcassets in Resources */,
 				1FA43BD8224E569900F565CB /* Main.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		973918AC25FF7B8000D10EE3 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,9 +302,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				973918C925FF870000D10EE3 /* CountOnMeExtensions.swift in Sources */,
 				1FA43BD5224E569900F565CB /* CalculatorViewController.swift in Sources */,
 				979BE31425D3F31C0055999A /* Calculation.swift in Sources */,
 				1FA43BD3224E569900F565CB /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		973918AA25FF7B8000D10EE3 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				973918B125FF7B8000D10EE3 /* CountOnMeUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -249,6 +328,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		973918B425FF7B8000D10EE3 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 1FA43BCE224E569900F565CB /* CountOnMe */;
+			targetProxy = 973918B325FF7B8000D10EE3 /* PBXContainerItemProxy */;
+		};
 		979BE34B25D40C620055999A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 1FA43BCE224E569900F565CB /* CountOnMe */;
@@ -430,13 +514,46 @@
 			};
 			name = Release;
 		};
+		973918B525FF7B8000D10EE3 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = CountOnMeUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = fr.ianisrichardier.CountOnMeUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = CountOnMe;
+			};
+			name = Debug;
+		};
+		973918B625FF7B8000D10EE3 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				INFOPLIST_FILE = CountOnMeUITests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = fr.ianisrichardier.CountOnMeUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = CountOnMe;
+			};
+			name = Release;
+		};
 		979BE34D25D40C620055999A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = CountOnMeTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -445,7 +562,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = fr.ianisrichardier.CountOnMeTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CountOnMe.app/CountOnMe";
 			};
 			name = Debug;
@@ -456,7 +572,6 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = CountOnMeTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.4;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -465,7 +580,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = fr.ianisrichardier.CountOnMeTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CountOnMe.app/CountOnMe";
 			};
 			name = Release;
@@ -487,6 +601,15 @@
 			buildConfigurations = (
 				1FA43BF8224E569A00F565CB /* Debug */,
 				1FA43BF9224E569A00F565CB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		973918B725FF7B8000D10EE3 /* Build configuration list for PBXNativeTarget "CountOnMeUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				973918B525FF7B8000D10EE3 /* Debug */,
+				973918B625FF7B8000D10EE3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

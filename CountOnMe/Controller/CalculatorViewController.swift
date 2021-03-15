@@ -13,9 +13,9 @@ class CalculatorViewController: UIViewController {
     // MARK: - Properties
     
     @IBOutlet weak var textView: UITextView!
-
+    
     var calculation = Calculation()
-
+    
     // MARK: - Methods
     
     @objc func calculationUpdated() {
@@ -23,9 +23,9 @@ class CalculatorViewController: UIViewController {
     }
     
     @objc func errorDivisionByZero() {
-            let alertVC = UIAlertController(title: "Erreur", message: "Division par zéro impossible", preferredStyle: .alert)
-            alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
-            self.present(alertVC, animated: true, completion: nil)
+        let alertVC = UIAlertController(title: "Erreur", message: "Division par zéro impossible", preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        self.present(alertVC, animated: true, completion: nil)
     }
     
     // MARK: - View Life cycles methods

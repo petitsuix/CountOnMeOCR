@@ -10,22 +10,17 @@ import Foundation
 
 class Calculation {
     
-    // MARK: - Instanciated textView
+    // MARK: - Notification methods
     
-    var calculationExpression: String = "" {
-        didSet {
-            notifyCalculationUpdated()
-        }
-    }
-    
-    // Posting calculation error notification to the Calculator View Controller observer
+    // TODO: passer à la fin
+    // Posting "calculation error" notification to the Calculator View Controller observer
     private func notifyErrorDivisionByZero() {
         let notificationName = NSNotification.Name(rawValue: "calculation error")
         let notification = Notification(name: notificationName)
         NotificationCenter.default.post(notification)
     }
     
-    // Posting calculation updated notification to the Calculator View Controller observer
+    // Posting "calculation updated" notification to the Calculator View Controller observer
     private func notifyCalculationUpdated() {
         let notificationName = NSNotification.Name(rawValue: "calculation updated")
         let notification = Notification(name: notificationName)
@@ -34,7 +29,14 @@ class Calculation {
     
     // MARK: - Properties
     
-    // Splitting and instanciating textView
+    // calculationExpression takes the value obtained through notifyCalculationUpdated()
+    var calculationExpression: String = "" {
+        didSet {
+            notifyCalculationUpdated()
+        }
+    }
+    
+    // Splitting and instanciating calculationExpression
     var elements: [String] {
         return calculationExpression.split(separator: " ").map { (operand) -> String in
             return "\(operand)"
@@ -67,6 +69,8 @@ class Calculation {
         return true
     }
     
+    // MARK: - Methods
+    
     func resetCalculationExpression() {
         calculationExpression = ""
     }
@@ -97,7 +101,7 @@ class Calculation {
             operationsToReduce.remove(at: 1)
         }
         while operationsToReduce.count >= 3 {
-            var operandIndex = 1 // operand's index is always 1 (ex : 6 + 2)...
+            var operandIndex = 1 // operand index is always 1 (ex : 6 + 2)...
                 if let index = operationsToReduce.firstIndex(where: { $0.contains("×") || $0.contains("÷")}) { // ... unless the calculation contains priority operands. If so, the index value is set accordingly to the operand's place.
                     operandIndex = index
             }
@@ -154,16 +158,5 @@ class Calculation {
         guard expressionIsNotDividedByZero else { notifyErrorDivisionByZero(); return }
         guard verifyCalculationIsValid() else { return }
         cleanResult()
-    }
-}
-
-// Allows to format the result
-extension Double {
-    func cleanCalculations() -> String {
-        let formatter = NumberFormatter()
-        let number = NSNumber(value: self)
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 4
-        return String(formatter.string(from: number) ?? "= wrong format")
     }
 }
