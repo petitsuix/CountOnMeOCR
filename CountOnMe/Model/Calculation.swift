@@ -88,7 +88,7 @@ class Calculation {
     // This method goes through typical error properties to ensure that the calculation is valid before resolving it
     private func verifyCalculationIsValid() -> Bool {
         if expressionAlreadyHasAResult {
-            if let cleanedResult = (Double("\(calculationResult)")?.cleanCalculations()) {
+            if let cleanedResult = (Double("\(calculationResult)")?.truncateExtraDecimals()) {
                 resetCalculationExpression()
                 calculationExpression.append(" = \(cleanedResult)")
             }
@@ -140,7 +140,7 @@ class Calculation {
     
     // Takes the unnecessary decimals out to show a "cleaned result"
     private func cleanResult() {
-        if let cleanedResult = (Double("\(resolve())")?.cleanCalculations()) {
+        if let cleanedResult = (Double("\(resolve())")?.truncateExtraDecimals()) {
             calculationExpression.append(" = \(cleanedResult)")
         }
     }

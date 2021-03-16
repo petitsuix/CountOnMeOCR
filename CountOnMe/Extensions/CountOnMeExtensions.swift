@@ -11,7 +11,7 @@ import Foundation
 
 extension Double {
     // Allows to format the result
-    func cleanCalculations() -> String { // peut être changer le nom de la func
+    func truncateExtraDecimals() -> String {
         let formatter = NumberFormatter()
         let number = NSNumber(value: self)
         formatter.minimumFractionDigits = 0
