@@ -16,6 +16,6 @@ extension Double {
         let number = NSNumber(value: self)
         formatter.minimumFractionDigits = 0
         formatter.maximumFractionDigits = 4
-        return String(formatter.string(from: number) ?? "= wrong format")
+        return String(formatter.string(from: number) ?? "\(self)")
     }
 }

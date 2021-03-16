@@ -12,8 +12,6 @@ class CountOnMeUITests: XCTestCase {
 
     var app: XCUIApplication!
     
-    
-    
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
 
@@ -44,7 +42,7 @@ class CountOnMeUITests: XCTestCase {
         // Use recording to get started writing UI tests.
         // Use XCTAssert and related functions to verify your tests produce the correct results.
         let textView = app.textViews.firstMatch
-        XCTAssertEqual(textView.value as? String, "") // value is "any", must set it as String
+        XCTAssertEqual(textView.value as? String, "") // .value is "any", must specify it's a String
     }
     
     func testAllSymbolButtons() throws {
