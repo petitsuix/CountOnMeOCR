@@ -12,7 +12,7 @@ class Calculation {
     
     // MARK: - Public & private properties
     
-    // calculationExpression takes the value obtained through notifyCalculationUpdated()
+    // calculationExpression observer allows to notify once calculation is updated
     var calculationExpression: String = "" {
         didSet {
             notifyCalculationUpdated()

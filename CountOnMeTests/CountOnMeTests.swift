@@ -89,6 +89,7 @@ class CountOnMeTests: XCTestCase {
         calculation.equals()
         // Then
         XCTAssertEqual(calculation.calculationResult, "8.0")
+        XCTAssertEqual(calculation.calculationExpression, "4 ÷ 2 + 2 × 3 = 8")
     }
     
     // MARK: - calculationExpression cleaning before new calculation tests

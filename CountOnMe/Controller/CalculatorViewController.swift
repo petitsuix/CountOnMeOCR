@@ -39,7 +39,7 @@ class CalculatorViewController: UIViewController {
         NotificationCenter.default.addObserver(self, selector: #selector(errorDivisionByZero), name: notificationErrorName, object: nil)
     }
     
-    // MARK: - Actions
+    // MARK: - Action methods
     
     @IBAction func tappedACButton() {
         calculation.resetCalculationExpression()
